@@ -5,7 +5,7 @@
 
 	<groupId>io.github.yangziwen</groupId>
 	<artifactId>diff-check</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.4</version>
 	<packaging>pom</packaging>
 
 	<name>diff-check</name>
