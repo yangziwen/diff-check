@@ -38,8 +38,11 @@ public class PMDParameters {
     @Parameter(names = { "-base-rev", "-br" }, description = "The base revision used to calculate changed files in a git directory.")
     private String baseRev;
 
-    @Parameter(names = { "-include-staged-codes", "-is" }, description = "Whether to consider codes in the staging area")
+    @Parameter(names = { "-include-staged-codes", "-is" }, description = "Whether to consider codes in the staging area.")
     private boolean includeStagedCodes = false;
+
+    @Parameter(names = { "-exclude-regexp", "-er" }, description = "The file path to exclude for the check.")
+    private String excludeRegexp;
 
     @Parameter(names = { "-format", "-f" }, description = "Report format type.")
     private String format = "text"; // Enhance to support other usage
@@ -161,6 +164,7 @@ public class PMDParameters {
         configuration.setGitDir(params.getGitDir());
         configuration.setBaseRev(params.getBaseRev());
         configuration.setIncludeStagedCodes(params.isIncludeStagedCodes());
+        configuration.setExcludeRegexp(params.getExcludeRegexp());
 
         LanguageVersion languageVersion = LanguageRegistry.findLanguageVersionByTerseName(params.getLanguage() + " " + params.getVersion());
         if(languageVersion != null) {
@@ -261,9 +265,17 @@ public class PMDParameters {
         return includeStagedCodes;
     }
 
-    public String getFileListPath() {
+    public String getExcludeRegexp() {
+		return excludeRegexp;
+	}
+
+	public void setExcludeRegexp(String excludeRegexp) {
+		this.excludeRegexp = excludeRegexp;
+	}
+
+	public String getFileListPath() {
         return fileListPath;
-    };
+    }
 
     public String getFormat() {
         return format;

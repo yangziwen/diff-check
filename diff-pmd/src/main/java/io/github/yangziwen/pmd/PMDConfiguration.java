@@ -24,6 +24,10 @@ public class PMDConfiguration extends net.sourceforge.pmd.PMDConfiguration {
     @Setter
     private boolean includeStagedCodes;
 
+    @Getter
+    @Setter
+    private String excludeRegexp;
+
     @Override
     public Renderer createRenderer(boolean withReportWriter) {
         Renderer renderer = RendererFactory.createRenderer(getReportFormat(), getReportProperties());

@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -421,6 +422,12 @@ public class Main {
         }
     }
 
+    /**
+     * Determines all the diff files, that should be analyzed by PMD.
+     * @param configuration contains either the file path or the DB URI, from where to load the files
+     * @param languages used to filter by file extension
+     * @return List<DataSource> of files
+     */
     public static List<DataSource> getApplicableGitDiffFiles(PMDConfiguration configuration, Set<Language> languages) {
         long startFiles = System.nanoTime();
         List<File> diffFiles = calculateGitDiffFiles(configuration, languages);
@@ -453,13 +460,18 @@ public class Main {
             List<DiffEntryWrapper> diffEntryList = calculator.calculateDiff(repoDir, oldRev, newRev, includeStagedCodes)
                     .stream()
                     .filter(diffEntry -> !diffEntry.isDeleted())
+                    .filter(diffEntry -> fileSelector.accept(diffEntry.getNewFile().getParentFile(), diffEntry.getNewFile().getName()))
                     .collect(Collectors.toList());
+
+            if (StringUtils.isNotBlank(configuration.getExcludeRegexp())) {
+                Pattern excludePattern = Pattern.compile(configuration.getExcludeRegexp());
+                diffEntryList.removeIf(diffEntry -> excludePattern.matcher(diffEntry.getAbsoluteNewPath()).matches());
+            }
 
              DIFF_ENTRY_LIST.addAll(diffEntryList);
 
              return diffEntryList.stream()
                     .map(DiffEntryWrapper::getNewFile)
-                    .filter(file -> fileSelector.accept(file.getParentFile(), file.getName()))
                     .collect(Collectors.toList());
 
          } catch (Exception e) {
@@ -478,6 +490,10 @@ public class Main {
     public static List<DataSource> getApplicableFiles(PMDConfiguration configuration, Set<Language> languages) {
         long startFiles = System.nanoTime();
         List<DataSource> files = internalGetApplicableFiles(configuration, languages);
+        if (StringUtils.isNotBlank(configuration.getExcludeRegexp())) {
+            Pattern excludePattern = Pattern.compile(configuration.getExcludeRegexp());
+            files.removeIf(file -> excludePattern.matcher(file.getNiceFileName(false, "")).matches());
+        }
         long endFiles = System.nanoTime();
         Benchmarker.mark(Benchmark.CollectFiles, endFiles - startFiles, 0);
         return files;

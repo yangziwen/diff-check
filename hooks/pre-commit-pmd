@@ -23,12 +23,18 @@ if [ $result -ne 0 ]; then
     exit 0
 fi
 
+exclude_regexp="`git config --get pmd.exclude-regexp`"
+exclude_regexp_opt=""
+if [ -n "$exclude_regexp" ]; then
+	exclude_regexp_opt="-exclude-regexp $exclude_regexp"
+fi
+
 pmd_rulesets="`git config --get pmd.rulesets`"
 if [ -z "$pmd_rulesets" ]; then
     pmd_rulesets="rulesets/java/ali-all.xml"
 fi
 echo "PMD Check"
-java -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes
+java -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes $exclude_regexp_opt
 result=$?
 if [ $result -ne 0 ]; then
     echo "Please fix the pmd problems before submit the commit!"
