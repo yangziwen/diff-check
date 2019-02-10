@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pmd_enabled="`git config --get pmd.enabled`"
+pmd_enabled="`git config --get diff-check.pmd.enabled`"
 if [[ "true" != "$pmd_enabled" ]]; then
     exit 0
 fi
@@ -23,13 +23,13 @@ if [ $result -ne 0 ]; then
     exit 0
 fi
 
-exclude_regexp="`git config --get pmd.exclude-regexp`"
+exclude_regexp="`git config --get diff-check.pmd.exclude-regexp`"
 exclude_regexp_opt=""
 if [ -n "$exclude_regexp" ]; then
 	exclude_regexp_opt="-exclude-regexp $exclude_regexp"
 fi
 
-pmd_rulesets="`git config --get pmd.rulesets`"
+pmd_rulesets="`git config --get diff-check.pmd.rulesets`"
 if [ -z "$pmd_rulesets" ]; then
     pmd_rulesets="rulesets/java/ali-all.xml"
 fi

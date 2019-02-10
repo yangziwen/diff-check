@@ -1,6 +1,6 @@
 #!/bin/bash
 
-checkstyle_enabled="`git config --get checkstyle.enabled`"
+checkstyle_enabled="`git config --get diff-check.checkstyle.enabled`"
 if [[ "true" != "$checkstyle_enabled" ]]; then
     exit 0
 fi
@@ -21,14 +21,14 @@ if [ $result -ne 0 ]; then
     exit 0
 fi
 
-exclude_regexp="`git config --get checkstyle.exclude-regexp`"
+exclude_regexp="`git config --get diff-check.checkstyle.exclude-regexp`"
 exclude_regexp_opt=""
 if [ -n "$exclude_regexp" ]; then
 	exclude_regexp_opt="--exclude-regexp $exclude_regexp"
 fi
 
-checkstyle_config_file="`git config --get checkstyle.config-file`"
-if [ -z "$checkstyle_config_file" -o ! -f $checkstyle_config_file ]; then
+checkstyle_config_file="`git config --get diff-check.checkstyle.config-file`"
+if [ -z "$checkstyle_config_file" -o ! -f "$checkstyle_config_file" ]; then
     checkstyle_config_file="/custom_checks.xml"
 fi
 
