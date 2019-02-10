@@ -1,0 +1,37 @@
+#!/bin/bash
+
+pmd_enabled="`git config --get pmd.enabled`"
+if [[ "true" != "$pmd_enabled" ]]; then
+    exit 0
+fi
+
+GIT_ROOT_DIR=`git rev-parse --show-toplevel`
+GIT_HOOK_DIR=`git config --get core.hooksPath`
+if [ ! -d "${GIT_HOOK_DIR}" ]; then
+    GIT_HOOK_DIR="${GIT_ROOT_DIR}/.git/hooks"
+fi
+
+if [ ! -f "${GIT_HOOK_DIR}/diff-pmd.jar" ]; then
+    echo "diff-pmd.jar does not exist!"
+    exit 0
+fi
+
+# check whether this is the first commit
+git log --oneline -1 > /dev/null 2>&1
+result=$?
+if [ $result -ne 0 ]; then
+    exit 0
+fi
+
+pmd_rulesets="`git config --get pmd.rulesets`"
+if [ -z "$pmd_rulesets" ]; then
+    pmd_rulesets="rulesets/java/all.xml"
+fi
+echo "PMD Check"
+java -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes
+result=$?
+if [ $result -ne 0 ]; then
+    echo "Please fix the pmd problems before submit the commit!"
+    exit $result
+fi
+exit 0

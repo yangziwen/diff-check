@@ -1,0 +1,43 @@
+#!/bin/bash
+
+checkstyle_enabled="`git config --get checkstyle.enabled`"
+if [[ "true" != "$checkstyle_enabled" ]]; then
+    exit 0
+fi
+
+GIT_ROOT_DIR=`git rev-parse --show-toplevel`
+GIT_HOOK_DIR=`git config --get core.hooksPath`
+if [ ! -d "${GIT_HOOK_DIR}" ]; then
+    GIT_HOOK_DIR="${GIT_ROOT_DIR}/.git/hooks"
+fi
+if [ ! -f "${GIT_HOOK_DIR}/diff-checkstyle.jar" ]; then
+    echo "diff-checkstyle.jar does not exist!"
+    exit 0
+fi
+# check whether this is the first commit
+git log --oneline -1 > /dev/null 2>&1
+result=$?
+if [ $result -ne 0 ]; then
+    exit 0
+fi
+
+exclude_regexp="`git config --get checkstyle.exclude-regexp`"
+exclude_regexp_opt=""
+if [ -n "$exclude_regexp" ]; then
+	exclude_regexp_opt="--exclude-regexp $exclude_regexp"
+fi
+
+checkstyle_config_file="`git config --get checkstyle.config-file`"
+if [ -z "$checkstyle_config_file" -o ! -f $checkstyle_config_file ]; then
+    checkstyle_config_file="/custom_checks.xml"
+fi
+
+echo "Check Style"
+java -jar ${GIT_HOOK_DIR}/diff-checkstyle.jar -c $checkstyle_config_file --git-dir ${GIT_ROOT_DIR} --include-staged-codes $exclude_regexp_opt
+result=$?
+if [ $result -ne 0 ]; then
+    echo "Please fix the checkstyle problems before submit the commit!"
+    exit $result
+fi
+exit 0
+

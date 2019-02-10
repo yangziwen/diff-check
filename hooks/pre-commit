@@ -1,0 +1,13 @@
+#!/bin/bash
+
+`dirname $0`/pre-commit-checkstyle "$@"
+result=$?
+if [ $result -ne 0 ]; then
+    exit $result
+fi
+
+`dirname $0`/pre-commit-pmd "$@"
+result=$?
+if [ $result -ne 0 ]; then
+    exit $result
+fi
