@@ -25,7 +25,7 @@ fi
 
 pmd_rulesets="`git config --get pmd.rulesets`"
 if [ -z "$pmd_rulesets" ]; then
-    pmd_rulesets="rulesets/java/all.xml"
+    pmd_rulesets="rulesets/java/ali-all.xml"
 fi
 echo "PMD Check"
 java -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes
