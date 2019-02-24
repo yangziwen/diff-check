@@ -67,7 +67,9 @@ public class DiffAgentMojo extends AgentMojo {
                 .stream()
                 .filter(diffEntry -> !diffEntry.isDeleted())
                 .collect(Collectors.toList());
+
         IFilter diffFilter = new DiffFilter(getProject(), gitDir, diffEntryList);
+
         FilterUtil.appendFilter(diffFilter);
     }
 
