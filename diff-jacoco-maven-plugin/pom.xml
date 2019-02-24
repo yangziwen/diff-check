@@ -25,6 +25,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.github.yangziwen</groupId>
+            <artifactId>diff-core</artifactId>
+            <version>0.0.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
             <version>3.4</version>
