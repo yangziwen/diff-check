@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>diff-jacoco-maven-plugin</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>diff-jacoco-maven-plugin Maven Plugin</name>
@@ -27,7 +26,6 @@
         <dependency>
             <groupId>io.github.yangziwen</groupId>
             <artifactId>diff-core</artifactId>
-            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>

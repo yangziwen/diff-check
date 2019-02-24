@@ -8,7 +8,7 @@
 <plugin>
     <groupId>io.github.yangziwen</groupId>
     <artifactId>diff-jacoco-maven-plugin</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.4</version>
     <executions>
         <execution>
             <id>pre-test</id>
