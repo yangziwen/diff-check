@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.jgit.diff.Edit;
 import org.jacoco.core.internal.analysis.filter.IFilter;
@@ -23,35 +24,32 @@ public class DiffFilter implements IFilter {
 
     private static final String SOURCE_PATH_PREFIX = "/src/main/java/";
 
-    private final File baseDir;
-
-    private final File gitDir;
-
     private Map<String, DiffEntryWrapper> classPathDiffEntryMap = new HashMap<>();
 
-    public DiffFilter(File baseDir, File gitDir, List<DiffEntryWrapper> entries) {
-        this.baseDir = baseDir;
-        this.gitDir = gitDir;
+    public DiffFilter(MavenProject project, File gitDir, List<DiffEntryWrapper> entries) {
+        File baseDir = project.getBasedir();
         String baseDirPath = baseDir.getAbsolutePath();
+        @SuppressWarnings("unchecked")
+        List<String> modules = project.getModules();
         for (DiffEntryWrapper entry : entries) {
             if (!entry.getAbsoluteNewPath().startsWith(baseDirPath)) {
                 continue;
             }
             String name = StringUtils.replaceOnce(entry.getAbsoluteNewPath(), baseDirPath, "");
+            if (CollectionUtils.isNotEmpty(modules)) {
+                for (String module : modules) {
+                    if (name.startsWith("/" + module)) {
+                        name = StringUtils.replaceOnce(name, "/" + module, "");
+                        break;
+                    }
+                }
+            }
             if (!name.startsWith(SOURCE_PATH_PREFIX)) {
                 continue;
             }
             name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "");
             classPathDiffEntryMap.put(name, entry);
         }
-    }
-
-    public File getBaseDir() {
-        return baseDir;
-    }
-
-    public File getGitDir() {
-        return gitDir;
     }
 
     @Override

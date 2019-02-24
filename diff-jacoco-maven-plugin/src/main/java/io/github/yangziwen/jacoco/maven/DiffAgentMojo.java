@@ -14,6 +14,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.maven.AgentMojo;
 
+import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import io.github.yangziwen.diff.calculate.DiffCalculator;
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
 import io.github.yangziwen.jacoco.filter.DiffFilter;
@@ -26,6 +27,8 @@ import io.github.yangziwen.jacoco.util.FilterUtil;
         threadSafe = true
 )
 public class DiffAgentMojo extends AgentMojo {
+
+    private static final AtomicBoolean DIFF_FILTER_INJECTED = new AtomicBoolean(false);
 
     @Parameter(property = "jacoco.diff.oldrev", defaultValue = "")
     private String oldRev;
@@ -47,6 +50,10 @@ public class DiffAgentMojo extends AgentMojo {
 
     private void injectDiffFilter(String oldRev, String newRev) throws Exception {
 
+        if (DIFF_FILTER_INJECTED.getAndSet(true)) {
+            return;
+        }
+
         File baseDir = getProject().getBasedir();
 
         File gitDir = new FileRepositoryBuilder().findGitDir(baseDir).getGitDir();
@@ -60,7 +67,7 @@ public class DiffAgentMojo extends AgentMojo {
                 .stream()
                 .filter(diffEntry -> !diffEntry.isDeleted())
                 .collect(Collectors.toList());
-        IFilter diffFilter = new DiffFilter(baseDir, gitDir, diffEntryList);
+        IFilter diffFilter = new DiffFilter(getProject(), gitDir, diffEntryList);
         FilterUtil.appendFilter(diffFilter);
     }
 
