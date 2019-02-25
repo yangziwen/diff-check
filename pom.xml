@@ -8,6 +8,8 @@
 	<packaging>pom</packaging>
 
 	<name>diff-check</name>
+	<url>http://maven.apache.org</url>
+	<description>A code check tool suite based on git diff</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -247,7 +249,7 @@
 		<module>diff-core</module>
 		<module>diff-checkstyle</module>
 		<module>diff-pmd</module>
-    <module>diff-jacoco-maven-plugin</module>
-  </modules>
+		<module>diff-jacoco-maven-plugin</module>
+    </modules>
 
 </project>
