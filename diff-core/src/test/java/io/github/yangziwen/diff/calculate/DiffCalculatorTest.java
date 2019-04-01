@@ -1,9 +1,6 @@
 package io.github.yangziwen.diff.calculate;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +8,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.HistogramDiff;
 import org.eclipse.jgit.diff.RawTextComparator;
-import org.eclipse.jgit.junit.RepositoryTestCase;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Assert;
@@ -23,11 +19,12 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
-public class DiffCalculatorTest extends RepositoryTestCase {
+public class DiffCalculatorTest extends BaseCalculatorTest {
 
-    private static final String DEFAULT_USERNAME = "test";
-
-    private static final String DEFAULT_EMAIL = "test@test.com";
+    private static final Person DEFAULT_USER = Person.builder()
+            .name("test")
+            .email("test@test.com")
+            .build();
 
     @Before
     public void before() throws Exception {
@@ -297,22 +294,8 @@ public class DiffCalculatorTest extends RepositoryTestCase {
 
     }
 
-    private static void writeStringToFile(File file, String content) {
-        try (OutputStream out = new FileOutputStream(file)) {
-            out.write(content.getBytes());
-            out.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static RevCommit doCommit(Git git) throws Exception {
-        return git.commit()
-                .setAll(true)
-                .setAuthor(DEFAULT_USERNAME, DEFAULT_EMAIL)
-                .setCommitter(DEFAULT_USERNAME, DEFAULT_EMAIL)
-                .setMessage("new commit")
-                .call();
+    private RevCommit doCommit(Git git) throws Exception {
+        return super.doCommit(git, DEFAULT_USER, DEFAULT_USER, "new commit");
     }
 
 }
