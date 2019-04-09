@@ -1,7 +1,6 @@
 package io.github.yangziwen.jacoco.filter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +12,12 @@ import org.eclipse.jgit.diff.Edit;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
 import org.jacoco.core.internal.analysis.filter.IFilterOutput;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
+import io.github.yangziwen.jacoco.util.FilterUtil;
+import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
 public class DiffFilter implements IFilter {
 
@@ -58,7 +57,7 @@ public class DiffFilter implements IFilter {
             IFilterContext context,
             IFilterOutput output) {
 
-        String classPath = getClassPath(context);
+        String classPath = FilterUtil.getClassPath(context);
 
         InsnList instructions = methodNode.instructions;
 
@@ -69,7 +68,7 @@ public class DiffFilter implements IFilter {
             return;
         }
 
-        List<LineNumberNodeWrapper> nodeWrapperList = collectLineNumberNodeList(instructions);
+        List<LineNumberNodeWrapper> nodeWrapperList = FilterUtil.collectLineNumberNodeList(instructions);
 
         for (Edit edit : wrapper.getEditList()) {
             if (edit.getType() != Edit.Type.INSERT && edit.getType() != Edit.Type.REPLACE) {
@@ -77,7 +76,7 @@ public class DiffFilter implements IFilter {
             }
             for (LineNumberNodeWrapper nodeWrapper : nodeWrapperList) {
                 int line = nodeWrapper.getLine();
-                if (line >= edit.getBeginB() && line <= edit.getEndB()) {
+                if (line > edit.getBeginB() && line <= edit.getEndB()) {
                     nodeWrapper.setIgnored(false);
                 }
             }
@@ -87,71 +86,6 @@ public class DiffFilter implements IFilter {
             if (nodeWrapper.isIgnored()) {
                 output.ignore(nodeWrapper.getNode(), nodeWrapper.getNext());
             }
-        }
-
-    }
-
-    private List<LineNumberNodeWrapper> collectLineNumberNodeList(InsnList instructions) {
-        List<LineNumberNodeWrapper> list = new ArrayList<>();
-        AbstractInsnNode node = instructions.getFirst();
-        while (node != instructions.getLast()) {
-            if (node instanceof LineNumberNode) {
-                if (CollectionUtils.isNotEmpty(list)) {
-                    list.get(list.size() - 1).setNext(node);
-                }
-                list.add(new LineNumberNodeWrapper(LineNumberNode.class.cast(node)));
-            }
-            node = node.getNext();
-        }
-        if (CollectionUtils.isNotEmpty(list)) {
-            list.get(list.size() - 1).setNext(instructions.getLast());
-        }
-        return list;
-    }
-
-    private String getClassPath(IFilterContext context) {
-        int lastSlashIndex = context.getClassName().lastIndexOf(File.separator);
-        String path = context.getSourceFileName();
-        if (lastSlashIndex >= 0) {
-            path = context.getClassName().substring(0, lastSlashIndex + 1) + context.getSourceFileName();
-        }
-        return path;
-    }
-
-    static class LineNumberNodeWrapper {
-
-        private LineNumberNode node;
-
-        private AbstractInsnNode next;
-
-        private boolean ignored = true;
-
-        LineNumberNodeWrapper(LineNumberNode node) {
-            this.node = node;
-        }
-
-        public int getLine() {
-            return getNode().line;
-        }
-
-        public LineNumberNode getNode() {
-            return node;
-        }
-
-        public AbstractInsnNode getNext() {
-            return next;
-        }
-
-        public void setNext(AbstractInsnNode next) {
-            this.next = next;
-        }
-
-        public boolean isIgnored() {
-            return ignored;
-        }
-
-        public void setIgnored(boolean ignored) {
-            this.ignored = ignored;
         }
 
     }

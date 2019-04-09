@@ -59,7 +59,7 @@
 	<plugin>
 	    <groupId>io.github.yangziwen</groupId>
 	    <artifactId>diff-jacoco-maven-plugin</artifactId>
-	    <version>0.0.5</version>
+	    <version>0.0.6</version>
 	    <configuration>
           <excludes>
             <!-- 指定需要排除的类路径 -->
@@ -96,6 +96,9 @@
 	
 	# 使用jacoco.diff.against参数，实现HEAD与任意其他commit或分支之间的merge-base的比对
 	mvn test -Djacoco.diff.against=origin/master
+
+	# 使用jacoco.author.name或jacoco.author.email参数，按指定提交者的增量代码，完成覆盖率扫描
+	mvn test -Djacoco.diff.against=origin/master -Djacoco.author.name=yangziwen
 	```
 
 * 其他

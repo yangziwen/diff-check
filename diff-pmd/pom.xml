@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>diff-check</artifactId>
 		<groupId>io.github.yangziwen</groupId>
-		<version>0.0.5</version>
+		<version>0.0.6</version>
 	</parent>
 
 	<artifactId>diff-pmd</artifactId>
