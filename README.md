@@ -80,6 +80,7 @@
 	                <goal>report</goal>
 	            </goals>
 	            <configuration>
+	                <!-- 设置报告生成路径 -->
 	                <outputDirectory>${project.reporting.outputDirectory}/jacoco-diff</outputDirectory>
 	            </configuration>
 	        </execution>
