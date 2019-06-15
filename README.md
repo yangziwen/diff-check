@@ -100,6 +100,9 @@
 
 	# 使用jacoco.author.name或jacoco.author.email参数，按指定提交者的增量代码，完成覆盖率扫描
 	mvn test -Djacoco.diff.against=origin/master -Djacoco.author.name=yangziwen
+	
+	# 按如下方式可仅执行单个测试类，并生成报告
+	mvn clean test -Djacoco.diff.against=origin/master -DskipTests=false -Dtest=io.github.yangziwen.quickdao.example.repository.UserSpringJdbcRepositoryTest -DfailIfNoTests=false
 	```
 
 * 其他
