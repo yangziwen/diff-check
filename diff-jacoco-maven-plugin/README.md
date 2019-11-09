@@ -48,5 +48,12 @@ mvn test -Djacoco.diff.against=origin/master
 mvn test -Djacoco.diff.against=origin/master -Djacoco.author.name=yangziwen
 ```
 
+* 效果
+
+全量代码覆盖率 | 增量代码覆盖率
+-|-
+![全量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-summary.png) | ![增量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-summary.png)
+![全量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-detail.png) | ![增量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-detail.png)
+
 #### 其他
   在工程根目录添加**lombok.confg**文件，其中加入`lombok.addLombokGeneratedAnnotation = true`的配置，jacoco即可忽略所有lombok自动生成的方法([https://projectlombok.org/features/configuration](https://projectlombok.org/features/configuration))
