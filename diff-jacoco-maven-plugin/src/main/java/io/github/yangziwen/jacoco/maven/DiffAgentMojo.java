@@ -2,6 +2,7 @@ package io.github.yangziwen.jacoco.maven;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -16,7 +17,6 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.maven.AgentMojo;
 
-import edu.emory.mathcs.backport.java.util.concurrent.atomic.AtomicBoolean;
 import io.github.yangziwen.diff.calculate.BlameCalculator;
 import io.github.yangziwen.diff.calculate.DiffCalculator;
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
