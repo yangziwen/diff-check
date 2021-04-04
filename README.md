@@ -4,7 +4,7 @@
 
 [Chinese Doc](https://github.com/yangziwen/diff-check/blob/master/README_CN.md)
 ### Introduction
-When using code check tools to scan a project, it will output all the problems in each file at once. This makes it difficult to perform an effective check on the codes under development before cleaning up all the existing problems.
+When using code analysis tools to scan a project, it will output all the problems in each file at once. This makes it difficult to perform an effective check on the codes under development before cleaning up all the existing problems.
 
 In response to this pain point, I extended those tools including checkstyle, PMD and jacoco to perform scanning only on incremental changes of code lines.
 
