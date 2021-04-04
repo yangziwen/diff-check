@@ -87,14 +87,14 @@ In response to this pain point, I extended those tools including checkstyle, PMD
 
 * Run the unit tests
 ```Shell
- # Incremental code coverage scanning is achieved by specifying commit or branch for jacoco.diff.oldrev and jacoco.diff.newrev
+ # Incremental code coverage scanning is achieved by specifying commit or branch for `jacoco.diff.oldrev` and `jacoco.diff.newrev`
  # If these two parameters are not specified, a full coverage scan will be performed
  mvn test -Djacoco.diff.oldrev=9ac9182 -Djacoco.diff.newrev=HEAD
  
  # Use `jacoco.diff.against` parameter，you can compare the difference between HEAD and any other commit or branch, and get the code coverage result between them. 
  mvn test -Djacoco.diff.against=origin/master
 
- # Use the jacoco.author.name or jacoco.author.email parameters to complete the coverage scanning according to the incremental code of the specified submitter
+ # Use the `jacoco.author.name` or `jacoco.author.email` parameters to complete the coverage scanning according to the incremental code of the specified submitter
  mvn test -Djacoco.diff.against=origin/master -Djacoco.author.name=yangziwen
  
  You can run a single test class and get the report of it
