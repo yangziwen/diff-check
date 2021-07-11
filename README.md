@@ -58,7 +58,7 @@ In response to this pain point, I extended those tools including ***checkstyle**
  <plugin>
      <groupId>io.github.yangziwen</groupId>
      <artifactId>diff-jacoco-maven-plugin</artifactId>
-     <version>0.0.6</version>
+     <version>0.0.7</version>
      <configuration>
        <excludes>
          <!-- Specify the path to exclude -->
