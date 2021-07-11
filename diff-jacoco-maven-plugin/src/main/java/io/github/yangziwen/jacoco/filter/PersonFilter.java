@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.jacoco.core.internal.analysis.filter.IFilter;
@@ -16,6 +15,7 @@ import org.jacoco.core.internal.analysis.filter.IFilterOutput;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 
+import io.github.yangziwen.jacoco.util.CollectionUtil;
 import io.github.yangziwen.jacoco.util.FilterUtil;
 import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
@@ -27,15 +27,14 @@ public class PersonFilter implements IFilter {
 
     private PersonInfo personInfo;
 
-    @SuppressWarnings("unchecked")
     public PersonFilter(MavenProject project, File gitDir, PersonInfo personInfo, List<BlameResult> blameResults) {
         List<String> modules = project.getModules();
-        if (project.getParent() != null && CollectionUtils.isNotEmpty(project.getParent().getModules())) {
+        if (project.getParent() != null && CollectionUtil.isNotEmpty(project.getParent().getModules())) {
             modules.addAll(project.getParent().getModules());
         }
         for (BlameResult blameResult : blameResults) {
             String name = blameResult.getResultPath();
-            if (CollectionUtils.isNotEmpty(modules)) {
+            if (CollectionUtil.isNotEmpty(modules)) {
                 for (String module : modules) {
                     if (name.startsWith(module)) {
                         name = StringUtils.replaceOnce(name, module, "");

@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.HistogramDiff;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -25,6 +24,7 @@ import io.github.yangziwen.jacoco.filter.DiffFilter;
 import io.github.yangziwen.jacoco.filter.PersonFilter;
 import io.github.yangziwen.jacoco.filter.PersonFilter.PersonInfo;
 import io.github.yangziwen.jacoco.filter.PersonFilter.PersonType;
+import io.github.yangziwen.jacoco.util.CollectionUtil;
 import io.github.yangziwen.jacoco.util.FilterUtil;
 
 @Mojo(
@@ -102,7 +102,7 @@ public class DiffAgentMojo extends AgentMojo {
 
         FilterUtil.appendFilter(diffFilter);
 
-        if (CollectionUtils.isEmpty(diffEntryList)) {
+        if (CollectionUtil.isEmpty(diffEntryList)) {
             return;
         }
 

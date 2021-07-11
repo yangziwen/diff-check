@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.jacoco.core.internal.analysis.filter.Filters;
 import org.jacoco.core.internal.analysis.filter.IFilter;
 import org.jacoco.core.internal.analysis.filter.IFilterContext;
@@ -57,14 +56,14 @@ public class FilterUtil {
         AbstractInsnNode node = instructions.getFirst();
         while (node != instructions.getLast()) {
             if (node instanceof LineNumberNode) {
-                if (CollectionUtils.isNotEmpty(list)) {
+                if (CollectionUtil.isNotEmpty(list)) {
                     list.get(list.size() - 1).setNext(node);
                 }
                 list.add(new LineNumberNodeWrapper(LineNumberNode.class.cast(node)));
             }
             node = node.getNext();
         }
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (CollectionUtil.isNotEmpty(list)) {
             list.get(list.size() - 1).setNext(instructions.getLast());
         }
         return list;

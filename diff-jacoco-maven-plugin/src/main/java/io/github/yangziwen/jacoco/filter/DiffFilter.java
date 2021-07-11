@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.jgit.diff.Edit;
@@ -16,6 +15,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
+import io.github.yangziwen.jacoco.util.CollectionUtil;
 import io.github.yangziwen.jacoco.util.FilterUtil;
 import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
@@ -28,14 +28,13 @@ public class DiffFilter implements IFilter {
     public DiffFilter(MavenProject project, File gitDir, List<DiffEntryWrapper> entries) {
         File baseDir = project.getBasedir();
         String baseDirPath = baseDir.getAbsolutePath();
-        @SuppressWarnings("unchecked")
         List<String> modules = project.getModules();
         for (DiffEntryWrapper entry : entries) {
             if (!entry.getAbsoluteNewPath().startsWith(baseDirPath)) {
                 continue;
             }
             String name = StringUtils.replaceOnce(entry.getAbsoluteNewPath(), baseDirPath, "");
-            if (CollectionUtils.isNotEmpty(modules)) {
+            if (CollectionUtil.isNotEmpty(modules)) {
                 for (String module : modules) {
                     if (name.startsWith("/" + module)) {
                         name = StringUtils.replaceOnce(name, "/" + module, "");

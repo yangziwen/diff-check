@@ -6,7 +6,7 @@
     <parent>
         <artifactId>diff-check</artifactId>
         <groupId>io.github.yangziwen</groupId>
-        <version>0.0.6</version>
+        <version>0.0.7-SNAPSHOT</version>
     </parent>
 
     <artifactId>diff-jacoco-maven-plugin</artifactId>
@@ -34,8 +34,8 @@
         </dependency>
         <dependency>
             <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.2</version>
+            <artifactId>jacoco-maven-plugin</artifactId	>
+            <version>0.8.7</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
