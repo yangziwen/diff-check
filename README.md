@@ -51,6 +51,20 @@ In response to this pain point, I extended those tools including ***checkstyle**
  git config diff-check.pmd.exclude-regexp .+-client/.*
 ```
 
+* You can choose language in the following way 
+  (English is the default choice if the language you specified is not supported)
+```Shell
+# Specify the message language of both checkstyle and pmd
+git config diff-check.language en
+
+# Only specify the message language of checkstyle
+git config diff-check.checkstyle.language es
+
+# Only specify the message language of pmd
+git config diff-check.pmd.language zh
+
+```
+
 #### Run unit tests and get the code coverage report
 
 * Config the maven plugin
