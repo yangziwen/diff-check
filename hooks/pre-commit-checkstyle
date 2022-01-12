@@ -5,6 +5,16 @@ if [[ "true" != "$checkstyle_enabled" ]]; then
     exit 0
 fi
 
+checkstyle_language="`git config --get diff-check.checkstyle.language`"
+if [ ! -n "$checkstyle_language" ]; then
+    checkstyle_language="`git config --get diff-check.language`"
+fi
+if [ -n "$checkstyle_language" ]; then
+    checkstyle_language=" -Duser.language=$checkstyle_language "
+else
+    checkstyle_langauge=""
+fi
+
 GIT_ROOT_DIR=`git rev-parse --show-toplevel`
 GIT_HOOK_DIR=`git config --get core.hooksPath`
 if [ ! -d "${GIT_HOOK_DIR}" ]; then
@@ -33,7 +43,7 @@ if [ -z "$checkstyle_config_file" -o ! -f "$checkstyle_config_file" ]; then
 fi
 
 echo "Check Style"
-java -jar ${GIT_HOOK_DIR}/diff-checkstyle.jar -c $checkstyle_config_file --git-dir ${GIT_ROOT_DIR} --include-staged-codes $exclude_regexp_opt
+java $checkstyle_language -jar ${GIT_HOOK_DIR}/diff-checkstyle.jar -c $checkstyle_config_file --git-dir ${GIT_ROOT_DIR} --include-staged-codes $exclude_regexp_opt
 result=$?
 if [ $result -ne 0 ]; then
     echo "Please fix the checkstyle problems before submit the commit!"

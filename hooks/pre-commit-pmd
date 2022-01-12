@@ -5,6 +5,17 @@ if [[ "true" != "$pmd_enabled" ]]; then
     exit 0
 fi
 
+pmd_language="`git config --get diff-check.pmd.language`"
+if [ ! -n "$pmd_language" ]; then
+    pmd_language="`git config --get diff-check.language`"
+fi
+if [ -n "$pmd_language" ]; then
+    pmd_language=" -Dpmd.language=$pmd_language "
+else
+    pmd_language=""
+fi
+
+
 GIT_ROOT_DIR=`git rev-parse --show-toplevel`
 GIT_HOOK_DIR=`git config --get core.hooksPath`
 if [ ! -d "${GIT_HOOK_DIR}" ]; then
@@ -34,7 +45,7 @@ if [ -z "$pmd_rulesets" ]; then
     pmd_rulesets="rulesets/java/ali-all.xml"
 fi
 echo "PMD Check"
-java -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes $exclude_regexp_opt
+java $pmd_language -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes $exclude_regexp_opt
 result=$?
 if [ $result -ne 0 ]; then
     echo "Please fix the pmd problems before submit the commit!"
