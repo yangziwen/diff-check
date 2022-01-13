@@ -5,8 +5,8 @@ opts="$*"
 PRE_COMMIT_HOOK_URL=https://raw.githubusercontent.com/yangziwen/diff-check/master/hooks/pre-commit
 PRE_COMMIT_CHECKSTYLE_HOOK_URL=https://raw.githubusercontent.com/yangziwen/diff-check/master/hooks/pre-commit-checkstyle
 PRE_COMMIT_PMD_HOOK_URL=https://raw.githubusercontent.com/yangziwen/diff-check/master/hooks/pre-commit-pmd
-CHECKSTYLE_JAR_URL=https://github.com/yangziwen/diff-check/releases/download/0.0.4/diff-checkstyle.jar
-PMD_JAR_URL=https://github.com/yangziwen/diff-check/releases/download/0.0.4/diff-pmd.jar
+CHECKSTYLE_JAR_URL=https://github.com/yangziwen/diff-check/releases/download/0.0.7/diff-checkstyle.jar
+PMD_JAR_URL=https://github.com/yangziwen/diff-check/releases/download/0.0.7/diff-pmd.jar
 
 function get_value_from_opts() {
     key="--$1="
