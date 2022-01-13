@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>diff-check</artifactId>
 		<groupId>io.github.yangziwen</groupId>
-		<version>0.0.7</version>
+		<version>0.0.8-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>diff-pmd</artifactId>
@@ -51,6 +51,10 @@
 					<artifactId>pmd-vm</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

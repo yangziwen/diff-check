@@ -4,7 +4,7 @@
 
 	<groupId>io.github.yangziwen</groupId>
 	<artifactId>diff-check</artifactId>
-	<version>0.0.7</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>diff-check</name>
@@ -13,11 +13,12 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jgit.version>4.4.1.201607150455-r</jgit.version>
+		<jgit.version>5.13.0.202109080827-r</jgit.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<checkstyle.version>8.14</checkstyle.version>
 		<pmd.version>5.5.2</pmd.version>
-		<p3c.version>1.3.0</p3c.version>
+		<p3c.version>1.3.6</p3c.version>
+		<fastjson.version>1.2.9</fastjson.version>
 		<lombok.version>1.18.2</lombok.version>
 		<junit.version>4.13.1</junit.version>
 		<mockito.version>1.10.19</mockito.version>
@@ -199,6 +200,11 @@
 						<artifactId>pmd-vm</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
