@@ -11,7 +11,13 @@
     <!-- 文件长度不超过1500行 -->
     <module name="FileLength">
         <property name="max" value="1500"/>
-     </module>
+    </module>
+
+    <!-- 长度检查 -->
+    <!-- 每行不超过140个字符 -->
+    <module name="LineLength">
+        <property name="max" value="140" />
+    </module>
 
     <!-- 每个java文件一个语法树 -->
     <module name="TreeWalker">
@@ -30,7 +36,7 @@
             <property name="allowUnknownTags" value="true"/>
             <message key="javadoc.missing" value="类注释：缺少Javadoc注释。"/>
         </module>
-        <module name="JavadocMethod">
+        <module name="MissingJavadocMethodCheck">
             <property name="scope" value="public"/>
             <property name="tokens" value="METHOD_DEF" />
             <!--允许get set 方法没有注释-->
@@ -88,11 +94,6 @@
         <!-- 检查long型定义是否有大写的“L” -->
         <module name="UpperEll"/>
 
-        <!-- 长度检查 -->
-        <!-- 每行不超过140个字符 -->
-        <module name="LineLength">
-            <property name="max" value="140" />
-        </module>
         <!-- 方法不超过100行 -->
         <module name="MethodLength">
             <property name="tokens" value="METHOD_DEF" />

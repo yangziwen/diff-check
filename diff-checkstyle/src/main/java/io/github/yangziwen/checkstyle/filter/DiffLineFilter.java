@@ -58,7 +58,7 @@ public class DiffLineFilter extends AutomaticBean implements Filter {
     }
 
     private boolean isEmptyLineSeparatorCheck(AuditEvent event) {
-        return EmptyLineSeparatorCheck.class.getName().equals(event.getLocalizedMessage().getSourceName());
+        return EmptyLineSeparatorCheck.class.getName().equals(event.getSourceName());
     }
 
 }
