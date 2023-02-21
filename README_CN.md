@@ -50,7 +50,7 @@
 	
 	git config diff-check.pmd.exclude-regexp .+-client/.*
 	```
-
+* 可通过添加[`--global`](https://git-scm.com/docs/git-config)选项，使上述`git config`命令全局生效
 #### 基于maven插件统计增量代码的单测覆盖率
 
 * 配置maven插件
