@@ -64,6 +64,7 @@ git config diff-check.checkstyle.language es
 git config diff-check.pmd.language zh
 
 ```
+* Be aware that you can make all the  `git config` commands effective globally by add [`--global`](https://git-scm.com/docs/git-config) option.
 
 #### Run unit tests and get the code coverage report
 
