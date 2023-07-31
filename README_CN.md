@@ -50,6 +50,20 @@
 	
 	git config diff-check.pmd.exclude-regexp .+-client/.*
 	```
+
+* 可通过以下方式设置输出结果的语言类型（当设置的语言不被支持时，英文en会被作为默认语言使用）
+
+	```
+	# 统一设置包括checkstyle和pmd在内的输出信息的语言类型
+	git config diff-check.language en
+
+	# 仅设置checkstyle输出信息的语言类型
+	git config diff-check.checkstyle.language es
+
+	# 仅设置pmd输出信息的语言类型
+	git config diff-check.pmd.language zh
+	```
+ 
 * 可通过添加[`--global`](https://git-scm.com/docs/git-config)选项，使上述`git config`命令全局生效
 #### 基于maven插件统计增量代码的单测覆盖率
 
