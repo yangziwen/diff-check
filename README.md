@@ -73,7 +73,7 @@ git config diff-check.pmd.language zh
  <plugin>
      <groupId>io.github.yangziwen</groupId>
      <artifactId>diff-jacoco-maven-plugin</artifactId>
-     <version>0.0.7</version>
+     <version>0.0.8</version>
      <configuration>
        <excludes>
          <!-- Specify the path to exclude -->
