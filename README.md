@@ -175,7 +175,7 @@ pipeline {
 }
 ```
 * Build pipeline and get the result
-![image](https://github.com/yangziwen/diff-check/assets/5212414/7b341424-ede4-43ce-9788-07998f407886)
+![diff-check-test-result](https://github.com/yangziwen/diff-check/assets/5212414/3a11da06-fc7e-4aad-845f-2f9d8d00f338)
 
 ### Others
 * Besides [sun_checks.xml](https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/sun_checks.xml) and [google_checks.xml](https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml) provided by checkstyle by default, two other configurations [custom_checks.xml](https://github.com/yangziwen/diff-check/blob/master/diff-checkstyle/src/main/resources/custom_checks.xml) and [custom_full_checks.xml](https://github.com/yangziwen/diff-check/blob/master/diff-checkstyle/src/main/resources/custom_full_checks.xml) which compatible with the Alibaba code specification have been provided. You can use your favorite style configuration by specifying the absolute file path with <b>-c</b> option.
