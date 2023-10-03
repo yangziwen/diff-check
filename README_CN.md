@@ -126,6 +126,58 @@
 ![全量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-summary.png) | ![增量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-summary.png)
 ![全量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-detail.png) | ![增量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-detail.png)
 
-* 其他
+#### 将diff-check集成到Jenkins的流水线中
+* 安装以下Jenkins插件
+    * Pipeline Plugin
+    * Git Plugin
+    * Code Coverage API Plugin
+    * Warning Next Generation Plugin
+* 配置Jenkins流水线（以下内容仅用于效果展示）
+```groovy
+pipeline {  
+    agent any
+    tools {
+        maven 'mvn-3.9.4'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'diff-check-test-branch', url: 'https://github.com/yangziwen/quick-dao'
+            }
+        }
+        stage('Check Style') {
+            steps {
+                script {
+                    sh "curl -L -o diff-checkstyle.jar https://github.com/yangziwen/diff-check/releases/download/0.0.8/diff-checkstyle.jar"
+                    def returnStatus = sh returnStatus:true, script: "java -jar ./diff-checkstyle.jar -c /custom_checks.xml ${WORKSPACE} --git-dir ${WORKSPACE} --base-rev=origin/master -f xml -o ${WORKSPACE}/checkstyle-result.xml"
+                    recordIssues tools: [checkStyle(name: 'Diff-CheckStyle', pattern: '**/checkstyle-result.xml', reportEncoding: 'UTF-8')]
+                    if (returnStatus != 0) {
+                        error("Diff-CheckStyle ends with errors")
+                    }
+                }
+            }
+        }
+        stage('Build and Test') {  
+            steps {  
+                sh 'mvn clean test -Djacoco.diff.against=origin/master'  
+            }  
+        }
+        stage('Analyze Coverage') {  
+            steps {  
+                recordCoverage(tools: [[parser: 'JACOCO']],
+                    id: 'diff-check-jacoco', name: 'Diff-Check Jacoco Coverage',
+                    sourceCodeRetention: 'EVERY_BUILD',
+                    qualityGates: [
+                            [threshold: 70.0, metric: 'LINE', baseline: 'PROJECT', unstable: true],
+                            [threshold: 70.0, metric: 'BRANCH', baseline: 'PROJECT', unstable: true]])
+            }  
+        }   
+    }
+}
+```
+* 执行构建并获得结果
+![image](https://github.com/yangziwen/diff-check/assets/5212414/7b341424-ede4-43ce-9788-07998f407886)
 
-    在工程根目录添加**lombok.confg**文件，其中加入`lombok.addLombokGeneratedAnnotation = true`的配置，jacoco即可忽略所有lombok自动生成的方法([https://projectlombok.org/features/configuration](https://projectlombok.org/features/configuration))
+
+### 其他
+在工程根目录添加**lombok.confg**文件，其中加入`lombok.addLombokGeneratedAnnotation = true`的配置，jacoco即可忽略所有lombok自动生成的方法([https://projectlombok.org/features/configuration](https://projectlombok.org/features/configuration))
