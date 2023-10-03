@@ -125,7 +125,57 @@ Full Code Coverage | Incremental Code Coverage
 ![全量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-summary.png) | ![增量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-summary.png)
 ![全量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-detail.png) | ![增量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-detail.png)
 
-
+#### Integrate diff-check into Jenkins pipeline
+* Install the following Jenkins plugins
+    * Pipeline Plugin
+    * Git Plugin
+    * Code Coverage API Plugin
+    * Warning Next Generation Plugin
+* Setup the Jenkins Pipeline configuration (the following example is for demonstration purposes only)
+```groovy
+pipeline {  
+    agent any
+    tools {
+        maven 'mvn-3.9.4'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'diff-check-test-branch', url: 'https://github.com/yangziwen/quick-dao'
+            }
+        }
+        stage('Check Style') {
+            steps {
+                script {
+                    sh "curl -L -o diff-checkstyle.jar https://github.com/yangziwen/diff-check/releases/download/0.0.8/diff-checkstyle.jar"
+                    def returnStatus = sh returnStatus:true, script: "java -jar ./diff-checkstyle.jar -c /custom_checks.xml ${WORKSPACE} --git-dir ${WORKSPACE} --base-rev=origin/master -f xml -o ${WORKSPACE}/checkstyle-result.xml"
+                    recordIssues tools: [checkStyle(name: 'Diff-CheckStyle', pattern: '**/checkstyle-result.xml', reportEncoding: 'UTF-8')]
+                    if (returnStatus != 0) {
+                        error("Diff-CheckStyle ends with errors")
+                    }
+                }
+            }
+        }
+        stage('Build and Test') {  
+            steps {  
+                sh 'mvn clean test -Djacoco.diff.against=origin/master'  
+            }  
+        }
+        stage('Analyze Coverage') {  
+            steps {  
+                recordCoverage(tools: [[parser: 'JACOCO']],
+                    id: 'diff-check-jacoco', name: 'Diff-Check Jacoco Coverage',
+                    sourceCodeRetention: 'EVERY_BUILD',
+                    qualityGates: [
+                            [threshold: 70.0, metric: 'LINE', baseline: 'PROJECT', unstable: true],
+                            [threshold: 70.0, metric: 'BRANCH', baseline: 'PROJECT', unstable: true]])
+            }  
+        }   
+    }
+}
+```
+* Build pipeline and get the result
+![image](https://github.com/yangziwen/diff-check/assets/5212414/7b341424-ede4-43ce-9788-07998f407886)
 
 ### Others
 * Besides [sun_checks.xml](https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/sun_checks.xml) and [google_checks.xml](https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml) provided by checkstyle by default, two other configurations [custom_checks.xml](https://github.com/yangziwen/diff-check/blob/master/diff-checkstyle/src/main/resources/custom_checks.xml) and [custom_full_checks.xml](https://github.com/yangziwen/diff-check/blob/master/diff-checkstyle/src/main/resources/custom_full_checks.xml) which compatible with the Alibaba code specification have been provided. You can use your favorite style configuration by specifying the absolute file path with <b>-c</b> option.
