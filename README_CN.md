@@ -176,7 +176,7 @@ pipeline {
 }
 ```
 * 执行构建并获得结果
-![image](https://github.com/yangziwen/diff-check/assets/5212414/7b341424-ede4-43ce-9788-07998f407886)
+![diff-check-test-result](https://github.com/yangziwen/diff-check/assets/5212414/3a11da06-fc7e-4aad-845f-2f9d8d00f338)
 
 
 ### 其他
