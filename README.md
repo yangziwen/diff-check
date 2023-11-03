@@ -114,7 +114,7 @@ git config diff-check.pmd.language zh
  # Use the `jacoco.author.name` or `jacoco.author.email` parameters to complete the coverage scanning according to the incremental code of the specified submitter
  mvn test -Djacoco.diff.against=origin/master -Djacoco.author.name=yangziwen
  
- You can run a single test class and get the report of it
+ # You can run a single test class and get the report of it
  mvn clean test -Djacoco.diff.against=origin/master -DskipTests=false -Dtest=io.github.yangziwen.quickdao.example.repository.UserSpringJdbcRepositoryTest -DfailIfNoTests=false
 ```
 
