@@ -1,6 +1,6 @@
 # diff-check
 
-[![Build Status](https://www.travis-ci.com/yangziwen/diff-check.svg?branch=master)](https://www.travis-ci.com/yangziwen/diff-check)
+[![Java CI with Maven](https://github.com/yangziwen/diff-check/actions/workflows/maven.yml/badge.svg)](https://github.com/yangziwen/diff-check/actions/workflows/maven.yml)
 
 [Chinese Doc](https://github.com/yangziwen/diff-check/blob/master/README_CN.md)
 ### Introduction
