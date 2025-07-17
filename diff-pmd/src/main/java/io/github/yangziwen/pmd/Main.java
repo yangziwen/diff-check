@@ -69,6 +69,7 @@ import net.sourceforge.pmd.util.datasource.DataSource;
 import net.sourceforge.pmd.util.datasource.ReaderDataSource;
 import net.sourceforge.pmd.util.log.ConsoleLogHandler;
 import net.sourceforge.pmd.util.log.ScopedLogHandlersManager;
+import org.eclipse.jgit.diff.RawTextComparator;
 
 /**
  * This is the main class for interacting with PMD. The primary flow of all Rule
@@ -455,7 +456,10 @@ public class Main {
             oldRev = includeStagedCodes ? "HEAD" : "HEAD~";
         }
         String newRev = "HEAD";
-        DiffCalculator calculator = DiffCalculator.builder().diffAlgorithm(new HistogramDiff()).build();
+        DiffCalculator calculator = DiffCalculator.builder()
+                .comparator(configuration.isIgnoreWhitespace() ? RawTextComparator.WS_IGNORE_ALL : RawTextComparator.DEFAULT)
+                .diffAlgorithm(new HistogramDiff()).build();
+
         try {
             List<DiffEntryWrapper> diffEntryList = calculator.calculateDiff(repoDir, oldRev, newRev, includeStagedCodes)
                     .stream()
