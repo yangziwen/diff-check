@@ -28,6 +28,10 @@ public class PMDConfiguration extends net.sourceforge.pmd.PMDConfiguration {
     @Setter
     private String excludeRegexp;
 
+    @Getter
+    @Setter
+    private boolean ignoreWhitespace;
+
     @Override
     public Renderer createRenderer(boolean withReportWriter) {
         Renderer renderer = RendererFactory.createRenderer(getReportFormat(), getReportProperties());

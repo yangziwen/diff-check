@@ -99,6 +99,9 @@ public class PMDParameters {
     @Parameter(names = "-norulesetcompatibility", description = "Disable the ruleset compatibility filter. The filter is active by default and tries automatically 'fix' old ruleset files with old rule names")
     private boolean noRuleSetCompatibility = false;
 
+    @Parameter(names = "-ignorewhitespace", description = "Ignore violations on lines that only have whitespace")
+    private boolean ignoreWhitespace = false;
+
     // this has to be a public static class, so that JCommander can use it!
     public static class PropertyConverter implements IStringConverter<Properties> {
 
@@ -165,6 +168,7 @@ public class PMDParameters {
         configuration.setBaseRev(params.getBaseRev());
         configuration.setIncludeStagedCodes(params.isIncludeStagedCodes());
         configuration.setExcludeRegexp(params.getExcludeRegexp());
+        configuration.setIgnoreWhitespace(params.ignoreWhitespace);
 
         LanguageVersion languageVersion = LanguageRegistry.findLanguageVersionByTerseName(params.getLanguage() + " " + params.getVersion());
         if(languageVersion != null) {
