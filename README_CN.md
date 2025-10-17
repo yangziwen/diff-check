@@ -123,8 +123,8 @@
 
 全量代码覆盖率 | 增量代码覆盖率
 -|-
-![全量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-summary.png) | ![增量覆盖率概览](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-summary.png)
-![全量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/full-coverage-detail.png) | ![增量覆盖率详情](https://raw.githubusercontent.com/wiki/yangziwen/diff-check/jacoco-images/incremental-coverage-detail.png)
+![全量覆盖率概览](https://github.com/user-attachments/assets/4d4d15db-81f0-4f1c-83b8-5cac751c4b19) | ![增量覆盖率概览](https://github.com/user-attachments/assets/c106fb48-0ead-4698-b23f-98cf599f1e75)
+![全量覆盖率详情](https://github.com/user-attachments/assets/4954b7a3-7c4a-4c33-a0f6-bf9b5482fd4b) | ![增量覆盖率详情](https://github.com/user-attachments/assets/cf874bec-6400-448b-b7fd-33478c283ee8)
 
 #### 将diff-check集成到Jenkins的流水线中
 * 安装以下Jenkins插件
