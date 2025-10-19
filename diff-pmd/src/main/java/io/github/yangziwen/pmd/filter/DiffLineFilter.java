@@ -25,11 +25,20 @@ public class DiffLineFilter {
             return false;
         }
         for (Edit edit : editList) {
-            if (edit.getBeginB() <= violation.getBeginLine() && edit.getEndB() >= violation.getEndLine()) {
-                return true;
-            }
+            int offset = insertedWithinExistingLines(edit) ? 1 : 0;
+            int changedLineBegin = edit.getBeginB() + offset;
+            int changedLineEnd = edit.getEndB() + offset;
+            return violationWithinEdit(violation, changedLineBegin, changedLineEnd);
         }
         return false;
+    }
+
+    private static boolean insertedWithinExistingLines(Edit edit) {
+        return edit.getBeginA() + 1 == edit.getEndA();
+    }
+
+    private static boolean violationWithinEdit(RuleViolation violation, int changedLineBegin, int changedLineEnd) {
+        return changedLineBegin <= violation.getBeginLine() && changedLineEnd >= violation.getEndLine();
     }
 
 }
