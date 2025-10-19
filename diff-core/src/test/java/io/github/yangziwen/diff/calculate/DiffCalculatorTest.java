@@ -77,7 +77,7 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             Assert.assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange, wrapper.getNewFile());
+            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
@@ -138,7 +138,7 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             Assert.assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange, wrapper.getNewFile());
+            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
@@ -238,7 +238,7 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             Assert.assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange, wrapper.getNewFile());
+            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
@@ -281,7 +281,7 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             Assert.assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToAdd, wrapper.getNewFile());
+            Assert.assertEquals(fileToAdd.getAbsolutePath(), wrapper.getAbsoluteNewPath());
 
             List<Edit> edits = wrapper.getEditList();
 
