@@ -1,6 +1,7 @@
 package io.github.yangziwen.diff.calculate;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.jgit.diff.DiffEntry;
@@ -53,7 +54,14 @@ public class DiffEntryWrapper {
     }
 
     public File getNewFile() {
-        return new File(gitDir, diffEntry.getNewPath());
+        return new File(normaliseParent(gitDir), diffEntry.getNewPath());
     }
 
+    private static String normaliseParent(File directory) {
+        try {
+            return directory.getCanonicalPath();
+        } catch (IOException e) {
+            return "";
+        }
+    }
 }
