@@ -263,11 +263,58 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<build>
+		<finalName>diff-check</finalName>
+		<plugins>
+			<plugin>
+				<groupId>io.github.yangziwen</groupId>
+                <artifactId>diff-jacoco-maven-plugin</artifactId>
+                <version>0.0.8</version>
+				<configuration>
+					<excludes>
+						<exclude>**/Main**.class</exclude>
+						<exclude>io/github/yangziwen/jacoco/**</exclude>
+						<exclude>org/jacoco/core/**</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-test</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>post-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.eluder.coveralls</groupId>
+				<artifactId>coveralls-maven-plugin</artifactId>
+				<version>4.3.0</version>
+				<configuration>
+					<repoToken>moSVSFee4dHqr39ng3JNyPbC2W3HDTSuA</repoToken>
+					<jacocoReports>
+						<jacocoReport>diff-core/target/site/jacoco/jacoco.xml</jacocoReport>
+					</jacocoReports>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<modules>
 		<module>diff-core</module>
 		<module>diff-checkstyle</module>
 		<module>diff-pmd</module>
 		<module>diff-jacoco-maven-plugin</module>
-    </modules>
+	</modules>
 
 </project>
