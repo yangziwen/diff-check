@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.diff.DiffAlgorithm;
@@ -71,7 +72,9 @@ public class DiffCalculator {
             String newRev,
             boolean includeStagedCodes) throws Exception {
 
-        try (Git git = Git.open(repoDir);
+        File normalizedRepoDir = new File(FilenameUtils.normalize(repoDir.getAbsolutePath()));
+
+        try (Git git = Git.open(normalizedRepoDir);
                 ObjectReader reader = git.getRepository().newObjectReader();
                 RevWalk rw = new RevWalk(git.getRepository())) {
 
@@ -81,14 +84,14 @@ public class DiffCalculator {
             List<DiffEntryWrapper> wrappers = new ArrayList<>();
 
             if (includeStagedCodes) {
-                wrappers.addAll(doCalculateIndexedDiff(oldCommit, reader, git, repoDir));
+                wrappers.addAll(doCalculateIndexedDiff(oldCommit, reader, git, normalizedRepoDir));
             }
 
             Set<String> indexedPathSet = wrappers.stream()
                     .map(wrapper -> wrapper.getNewPath())
                     .collect(Collectors.toSet());
 
-            wrappers.addAll(doCalculateCommitDiff(oldCommit, newCommit, reader, git, repoDir, indexedPathSet));
+            wrappers.addAll(doCalculateCommitDiff(oldCommit, newCommit, reader, git, normalizedRepoDir, indexedPathSet));
 
             return wrappers;
         }

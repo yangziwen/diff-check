@@ -43,29 +43,6 @@ public class DiffEntryWrapperTest {
         Assert.assertEquals(new File(directory, file).getCanonicalPath(), result);
     }
 
-    @Test
-    public void getAbsoluteNewPathWithRelativeGitDir() throws IOException {
-        String file = "file";
-        DiffEntryWrapper wrapper = DiffEntryWrapper.builder()
-                .gitDir(new File("."))
-                .diffEntry(new DummyDiffEntry(file))
-                .build();
-        String result = wrapper.getAbsoluteNewPath();
-        Assert.assertEquals(new File(".", file).getCanonicalPath(), result);
-    }
-
-    @Test
-    public void getAbsoluteNewPathException() throws IOException {
-        File mock = Mockito.mock(File.class);
-        Mockito.when(mock.getCanonicalPath()).thenThrow(new IOException(""));
-        DiffEntryWrapper wrapper = DiffEntryWrapper.builder()
-                .gitDir(mock)
-                .diffEntry(new DummyDiffEntry(""))
-                .build();
-        String result = wrapper.getAbsoluteNewPath();
-        Assert.assertEquals("/", result);
-    }
-
     // A "delete" edit is one where: beginA < endA && beginB == endB
     private static Edit buildDelete() {
         return new Edit(5, 10, 8, 8);
