@@ -1,6 +1,7 @@
 # diff-check
 
 [![Java CI with Maven](https://github.com/yangziwen/diff-check/actions/workflows/maven.yml/badge.svg)](https://github.com/yangziwen/diff-check/actions/workflows/maven.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0101bd3b974d4578813339011f07fcb7)](https://app.codacy.com/gh/yangziwen/diff-check/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 [Chinese Doc](https://github.com/yangziwen/diff-check/blob/master/README_CN.md)
 ### Introduction
