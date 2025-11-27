@@ -13,7 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jgit.version>5.13.3.202401111512-r</jgit.version>
+		<jgit.version>5.13.4.202507202350-r</jgit.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<checkstyle.version>9.3</checkstyle.version>
 		<pmd.version>5.5.2</pmd.version>
