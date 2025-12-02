@@ -21,7 +21,7 @@ import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
 public class DiffFilter implements IFilter {
 
-    private static final String SOURCE_PATH_PREFIX = "/src/main/java/";
+    private static final String SOURCE_PATH_PREFIX = File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator;
 
     private Map<String, DiffEntryWrapper> classPathDiffEntryMap = new HashMap<>();
 
@@ -30,14 +30,16 @@ public class DiffFilter implements IFilter {
         String baseDirPath = baseDir.getAbsolutePath();
         List<String> modules = project.getModules();
         for (DiffEntryWrapper entry : entries) {
-            if (!entry.getAbsoluteNewPath().startsWith(baseDirPath)) {
+            String absolutePath = entry.getAbsoluteNewPath();
+            if (!absolutePath.startsWith(baseDirPath)) {
                 continue;
             }
-            String name = StringUtils.replaceOnce(entry.getAbsoluteNewPath(), baseDirPath, "");
+            String name = StringUtils.replaceOnce(absolutePath, baseDirPath, "");
             if (CollectionUtil.isNotEmpty(modules)) {
                 for (String module : modules) {
-                    if (name.startsWith("/" + module)) {
-                        name = StringUtils.replaceOnce(name, "/" + module, "");
+                    String modulePrefix = File.separator + module;
+                    if (name.startsWith(modulePrefix)) {
+                        name = StringUtils.replaceOnce(name, modulePrefix , "");
                         break;
                     }
                 }
@@ -45,7 +47,8 @@ public class DiffFilter implements IFilter {
             if (!name.startsWith(SOURCE_PATH_PREFIX)) {
                 continue;
             }
-            name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "");
+            name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "").replace(File.separator, "/");
+            //name 与 FilterUtil.getClassPath 一致才能获取到
             classPathDiffEntryMap.put(name, entry);
         }
     }
