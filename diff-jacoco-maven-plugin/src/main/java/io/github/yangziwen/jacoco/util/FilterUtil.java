@@ -42,8 +42,16 @@ public class FilterUtil {
         modifiersField.setInt(filtersField, modifiers);
     }
 
+    /**
+     * 返回类文件的路径和名称
+     * @return 例如：com/example/Example.java
+     */
     public static String getClassPath(IFilterContext context) {
-        int lastSlashIndex = context.getClassName().lastIndexOf(File.separator);
+        /*
+         ASM 的 ClassReader 获取的 className 是内部名称格式（Internal Name），使用斜杠 / 作为包分隔符
+         返回的斜杠格式是 JVM 规范定义的内部名称格式，不是文件系统路径。
+         */
+        int lastSlashIndex = context.getClassName().lastIndexOf("/");
         String path = context.getSourceFileName();
         if (lastSlashIndex >= 0) {
             path = context.getClassName().substring(0, lastSlashIndex + 1) + context.getSourceFileName();
