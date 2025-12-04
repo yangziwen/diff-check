@@ -113,6 +113,8 @@ public class DiffAgentMojo extends AgentMojo {
         }
 
         getLog().info("creating diff filter with " + diffEntryList.size() + " diff entries");
+        getLog().info("current project baseDir: " + getProject().getBasedir().getAbsolutePath());
+        getLog().info("current project modules: " + getProject().getModules());
         IFilter diffFilter = new DiffFilter(getProject(), gitDir, diffEntryList);
 
         getLog().info("appending diff filter to jacoco filters");

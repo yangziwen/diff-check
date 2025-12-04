@@ -15,7 +15,6 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.MethodNode;
 
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
-import io.github.yangziwen.jacoco.util.CollectionUtil;
 import io.github.yangziwen.jacoco.util.FilterUtil;
 import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
@@ -28,27 +27,31 @@ public class DiffFilter implements IFilter {
     public DiffFilter(MavenProject project, File gitDir, List<DiffEntryWrapper> entries) {
         File baseDir = project.getBasedir();
         String baseDirPath = baseDir.getAbsolutePath();
-        List<String> modules = project.getModules();
+
         for (DiffEntryWrapper entry : entries) {
             String absolutePath = entry.getAbsoluteNewPath();
             if (!absolutePath.startsWith(baseDirPath)) {
                 continue;
             }
+
+            // 去掉项目根目录前缀
             String name = StringUtils.replaceOnce(absolutePath, baseDirPath, "");
-            if (CollectionUtil.isNotEmpty(modules)) {
-                for (String module : modules) {
-                    String modulePrefix = File.separator + module;
-                    if (name.startsWith(modulePrefix)) {
-                        name = StringUtils.replaceOnce(name, modulePrefix , "");
-                        break;
-                    }
-                }
-            }
-            if (!name.startsWith(SOURCE_PATH_PREFIX)) {
+
+            // 直接查找 /src/main/java/ 的位置，支持任意深度的嵌套模块
+            // 这种方式比逐级去除路径段更高效，且逻辑更清晰
+            int srcIndex = name.indexOf(SOURCE_PATH_PREFIX);
+            if (srcIndex < 0) {
+                // 不是 Java 源文件，跳过
                 continue;
             }
-            name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "").replace(File.separator, "/");
-            //name 与 FilterUtil.getClassPath 一致才能获取到
+
+            // 截取从 /src/main/java/ 之后的部分，得到类的相对路径
+            name = name.substring(srcIndex + SOURCE_PATH_PREFIX.length());
+
+            // 转换为 JVM 内部格式（使用 / 作为分隔符）
+            name = name.replace(File.separator, "/");
+
+            // name 与 FilterUtil.getClassPath 一致才能获取到
             classPathDiffEntryMap.put(name, entry);
         }
     }
