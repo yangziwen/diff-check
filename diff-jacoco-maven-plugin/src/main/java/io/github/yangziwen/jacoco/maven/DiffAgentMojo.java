@@ -59,7 +59,7 @@ public class DiffAgentMojo extends AgentMojo {
 
     @Parameter(property = "jacoco.committer.email", defaultValue = "")
     private String committerEmail;
-    
+
     @Parameter(property = "jacoco.diff.include.staged", defaultValue = "true")
     private boolean includeStagedCodes;
 
@@ -79,47 +79,48 @@ public class DiffAgentMojo extends AgentMojo {
     private void injectDiffFilter() throws Exception {
 
         if (DIFF_FILTER_INJECTED.getAndSet(true)) {
-            getLog().info("diff filter already injected, skipping");
             return;
         }
 
         File baseDir = getProject().getBasedir();
+
         getLog().info("project base dir: " + baseDir.getAbsolutePath());
 
         File gitDir = new FileRepositoryBuilder().findGitDir(baseDir).getGitDir();
-        getLog().info("found git dir: " + gitDir.getAbsolutePath());
 
         gitDir = gitDir.getParentFile();
+
         getLog().info("using git repo dir: " + gitDir.getAbsolutePath());
 
         if (StringUtils.isNotBlank(againstRef)) {
-            getLog().info("calculating merge base between " + againstRef + " and " + REF_HEAD);
-            oldRev = calculateMergeBase(gitDir, againstRef, REF_HEAD);
+            String mergeBase = calculateMergeBase(gitDir, againstRef, REF_HEAD);
+            oldRev = mergeBase;
             newRev = REF_HEAD;
-            getLog().info("merge base calculated: " + oldRev);
+            getLog().info(mergeBase + " is the merge base between " + againstRef + " and " + REF_HEAD);
         }
 
         getLog().info("calculating diff between " + oldRev + " and " + newRev + ", includeStagedCodes: " + includeStagedCodes);
+
         DiffCalculator calculator = DiffCalculator.builder()
                 .diffAlgorithm(new HistogramDiff())
                 .build();
+
         List<DiffEntryWrapper> diffEntryList = calculator.calculateDiff(gitDir, oldRev, newRev, includeStagedCodes)
                 .stream()
                 .filter(diffEntry -> !diffEntry.isDeleted())
                 .collect(Collectors.toList());
-        getLog().info("found " + diffEntryList.size() + " non-deleted diff entries");
+
+        getLog().info("found " + diffEntryList.size() + " non-deleted diff entries and add diff filter");
+
         for (DiffEntryWrapper entry : diffEntryList) {
             getLog().info("  diff entry: " + entry.getNewPath());
         }
 
-        getLog().info("creating diff filter with " + diffEntryList.size() + " diff entries");
         IFilter diffFilter = new DiffFilter(getProject(), gitDir, diffEntryList);
 
-        getLog().info("appending diff filter to jacoco filters");
         FilterUtil.appendFilter(diffFilter);
 
         if (CollectionUtil.isEmpty(diffEntryList)) {
-            getLog().info("no diff entries, skipping author/committer filter injection");
             return;
         }
 
@@ -132,20 +133,18 @@ public class DiffAgentMojo extends AgentMojo {
                     .calculate(gitDir, filePathList, newRev);
 
             if (needAuthorFilter()) {
-                getLog().info("injecting author filter for authorName: " + authorName + " , authorEmail: " + authorEmail );
+                getLog().info("add author filter, authorName is " + authorName + " , authorEmail is " + authorEmail );
                 PersonInfo author = new PersonInfo(authorName, authorEmail, PersonType.AUTHOR);
                 IFilter authorFilter = new PersonFilter(getProject(), gitDir, author, blameResults);
                 FilterUtil.appendFilter(authorFilter);
             }
 
             if (needCommitterFilter()) {
-                getLog().info("injecting committer filter for committerName: " + committerName + " , committerEmail: " + committerEmail);
+                getLog().info("add committer filter, committerName is " + committerName + " , committerEmail is " + committerEmail);
                 PersonInfo committer = new PersonInfo(committerName, committerEmail, PersonType.COMMITTER);
                 IFilter committerFilter = new PersonFilter(getProject(), gitDir, committer, blameResults);
                 FilterUtil.appendFilter(committerFilter);
             }
-        } else {
-            getLog().info("no author/committer filter needed");
         }
 
     }

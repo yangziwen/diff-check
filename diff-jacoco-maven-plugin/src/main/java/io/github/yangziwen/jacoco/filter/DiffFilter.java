@@ -21,7 +21,7 @@ import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
 public class DiffFilter implements IFilter {
 
-    private static final String SOURCE_PATH_PREFIX = File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator;
+    private static final String SOURCE_PATH_PREFIX = "/src/main/java/".replace("/", File.separator);
 
     private Map<String, DiffEntryWrapper> classPathDiffEntryMap = new HashMap<>();
 
@@ -47,7 +47,9 @@ public class DiffFilter implements IFilter {
             if (!name.startsWith(SOURCE_PATH_PREFIX)) {
                 continue;
             }
-            name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "").replace(File.separator, "/");
+            name = StringUtils
+                    .replaceOnce(name, SOURCE_PATH_PREFIX, "")
+                    .replace(File.separator, "/");
             //name 与 FilterUtil.getClassPath 一致才能获取到
             classPathDiffEntryMap.put(name, entry);
         }

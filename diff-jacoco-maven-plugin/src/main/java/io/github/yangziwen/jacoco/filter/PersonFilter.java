@@ -21,7 +21,7 @@ import io.github.yangziwen.jacoco.util.LineNumberNodeWrapper;
 
 public class PersonFilter implements IFilter {
 
-    private static final String SOURCE_PATH_PREFIX = "/src/main/java/";
+    private static final String SOURCE_PATH_PREFIX = "/src/main/java/".replace("/", File.separator);
 
     private Map<String, BlameResult> classPathBlameResultMap = new HashMap<>();
 
@@ -45,7 +45,9 @@ public class PersonFilter implements IFilter {
             if (!name.startsWith(SOURCE_PATH_PREFIX)) {
                 continue;
             }
-            name = StringUtils.replaceOnce(name, SOURCE_PATH_PREFIX, "");
+            name = StringUtils
+                    .replaceOnce(name, SOURCE_PATH_PREFIX, "")
+                    .replace(File.separator, "/");
             classPathBlameResultMap.put(name, blameResult);
         }
         this.personInfo = personInfo;
