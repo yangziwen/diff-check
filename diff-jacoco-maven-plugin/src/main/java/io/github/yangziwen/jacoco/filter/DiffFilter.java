@@ -25,33 +25,27 @@ public class DiffFilter implements IFilter {
 
     private Map<String, DiffEntryWrapper> classPathDiffEntryMap = new HashMap<>();
 
-    public DiffFilter(MavenProject project, File gitDir, List<DiffEntryWrapper> entries) {
-        File baseDir = project.getBasedir();
-        String baseDirPath = baseDir.getAbsolutePath();
-        List<String> modules = project.getModules();
-        for (DiffEntryWrapper entry : entries) {
-            String absolutePath = entry.getAbsoluteNewPath();
-            if (!absolutePath.startsWith(baseDirPath)) {
-                continue;
-            }
-            String name = StringUtils.replaceOnce(absolutePath, baseDirPath, "");
-            if (CollectionUtil.isNotEmpty(modules)) {
-                for (String module : modules) {
-                    String modulePrefix = File.separator + module;
-                    if (name.startsWith(modulePrefix)) {
-                        name = StringUtils.replaceOnce(name, modulePrefix , "");
-                        break;
-                    }
+    public DiffFilter(List<MavenProject> projectList, List<DiffEntryWrapper> entries) {
+        if (CollectionUtil.isEmpty(projectList)) {
+            return;
+        }
+        for (MavenProject project : projectList) {
+            File baseDir = project.getBasedir();
+            String baseDirPath = baseDir.getAbsolutePath();
+            for (DiffEntryWrapper entry : entries) {
+                String absolutePath = entry.getAbsoluteNewPath();
+                if (!absolutePath.startsWith(baseDirPath)) {
+                    continue;
                 }
+                String name = StringUtils.replaceOnce(absolutePath, baseDirPath, "");
+                if (!name.startsWith(SOURCE_PATH_PREFIX)) {
+                    continue;
+                }
+                name = StringUtils
+                        .replaceOnce(name, SOURCE_PATH_PREFIX, "")
+                        .replace(File.separator, "/");
+                classPathDiffEntryMap.put(name, entry);
             }
-            if (!name.startsWith(SOURCE_PATH_PREFIX)) {
-                continue;
-            }
-            name = StringUtils
-                    .replaceOnce(name, SOURCE_PATH_PREFIX, "")
-                    .replace(File.separator, "/");
-            //name 与 FilterUtil.getClassPath 一致才能获取到
-            classPathDiffEntryMap.put(name, entry);
         }
     }
 

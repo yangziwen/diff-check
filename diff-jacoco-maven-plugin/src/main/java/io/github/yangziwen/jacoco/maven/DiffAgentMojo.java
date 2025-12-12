@@ -9,6 +9,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.StringUtils;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.diff.HistogramDiff;
@@ -63,6 +64,9 @@ public class DiffAgentMojo extends AgentMojo {
     @Parameter(property = "jacoco.diff.include.staged", defaultValue = "true")
     private boolean includeStagedCodes;
 
+    @Parameter(defaultValue = "${reactorProjects}", readonly = true, required = true)
+    private List<MavenProject> reactorProjects;
+
     @Override
     public void executeMojo() {
         try {
@@ -115,8 +119,7 @@ public class DiffAgentMojo extends AgentMojo {
         for (DiffEntryWrapper entry : diffEntryList) {
             getLog().info("  diff entry: " + entry.getNewPath());
         }
-
-        IFilter diffFilter = new DiffFilter(getProject(), gitDir, diffEntryList);
+        IFilter diffFilter = new DiffFilter(reactorProjects, diffEntryList);
 
         FilterUtil.appendFilter(diffFilter);
 
@@ -135,14 +138,14 @@ public class DiffAgentMojo extends AgentMojo {
             if (needAuthorFilter()) {
                 getLog().info("add author filter, authorName is " + authorName + " , authorEmail is " + authorEmail );
                 PersonInfo author = new PersonInfo(authorName, authorEmail, PersonType.AUTHOR);
-                IFilter authorFilter = new PersonFilter(getProject(), gitDir, author, blameResults);
+                IFilter authorFilter = new PersonFilter(reactorProjects, author, blameResults);
                 FilterUtil.appendFilter(authorFilter);
             }
 
             if (needCommitterFilter()) {
                 getLog().info("add committer filter, committerName is " + committerName + " , committerEmail is " + committerEmail);
                 PersonInfo committer = new PersonInfo(committerName, committerEmail, PersonType.COMMITTER);
-                IFilter committerFilter = new PersonFilter(getProject(), gitDir, committer, blameResults);
+                IFilter committerFilter = new PersonFilter(reactorProjects, committer, blameResults);
                 FilterUtil.appendFilter(committerFilter);
             }
         }

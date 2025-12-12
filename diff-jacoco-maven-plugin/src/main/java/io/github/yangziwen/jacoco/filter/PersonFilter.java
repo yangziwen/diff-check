@@ -1,6 +1,8 @@
 package io.github.yangziwen.jacoco.filter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,30 +29,41 @@ public class PersonFilter implements IFilter {
 
     private PersonInfo personInfo;
 
-    public PersonFilter(MavenProject project, File gitDir, PersonInfo personInfo, List<BlameResult> blameResults) {
-        List<String> modules = project.getModules();
-        if (project.getParent() != null && CollectionUtil.isNotEmpty(project.getParent().getModules())) {
-            modules.addAll(project.getParent().getModules());
+    public PersonFilter(List<MavenProject> projectList, PersonInfo personInfo, List<BlameResult> blameResults) {
+        if (CollectionUtil.isEmpty(projectList)) {
+            return;
         }
-        for (BlameResult blameResult : blameResults) {
-            String name = blameResult.getResultPath();
-            if (CollectionUtil.isNotEmpty(modules)) {
-                for (String module : modules) {
-                    if (name.startsWith(module)) {
-                        name = StringUtils.replaceOnce(name, module, "");
-                        break;
-                    }
+        for (MavenProject  project : projectList) {
+            String modulePrefix = generateFullModulePrefix(project);
+            for (BlameResult blameResult : blameResults) {
+                String path = blameResult.getResultPath();
+                if (!path.startsWith(modulePrefix)) {
+                    continue;
                 }
+                String name = StringUtils.replaceOnce(path, modulePrefix, "");
+                if (!name.startsWith(File.separator)) {
+                    name = File.separator + name;
+                }
+                if (!name.startsWith(SOURCE_PATH_PREFIX)) {
+                    continue;
+                }
+                name = StringUtils
+                        .replaceOnce(name, SOURCE_PATH_PREFIX, "")
+                        .replace(File.separator, "/");
+                classPathBlameResultMap.put(name, blameResult);
             }
-            if (!name.startsWith(SOURCE_PATH_PREFIX)) {
-                continue;
-            }
-            name = StringUtils
-                    .replaceOnce(name, SOURCE_PATH_PREFIX, "")
-                    .replace(File.separator, "/");
-            classPathBlameResultMap.put(name, blameResult);
         }
         this.personInfo = personInfo;
+    }
+
+    private String generateFullModulePrefix(MavenProject project) {
+        List<String> moduleList = new ArrayList<>();
+        while (project != null && project.getParent() != null) {
+            moduleList.add(project.getBasedir().getName());
+            project = project.getParent();
+        }
+        Collections.reverse(moduleList);
+        return StringUtils.join(moduleList.toArray(), File.separator);
     }
 
     @Override
