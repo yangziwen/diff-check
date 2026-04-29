@@ -40,6 +40,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import io.github.yangziwen.checkstyle.filter.WholeDiffFilter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -472,10 +473,13 @@ public final class Main {
             rootModule.configure(config);
             rootModule.addListener(listener);
 
+            List<com.puppycrawl.tools.checkstyle.api.Filter> filters = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(DIFF_ENTRY_LIST) && rootModule instanceof Checker) {
-                Checker checker = (Checker) rootModule;
-                checker.addFilter(new DiffLineFilter(DIFF_ENTRY_LIST));
+                filters.add(new DiffLineFilter(DIFF_ENTRY_LIST));
+                filters.add(new WholeDiffFilter(options.wholeFileChecks));
             }
+            Checker checker = (Checker) rootModule;
+            checker.addFilter(evt -> filters.stream().anyMatch(f -> f.accept(evt)));
 
             // run RootModule
             errorCounter = rootModule.process(filesToProcess);
@@ -865,6 +869,11 @@ public final class Main {
         @Option(names = {"-is", "--include-staged-codes"},
                 description = "Whether to include indexed codes when calculating differencies of codes")
         private boolean gitIncludeStagedCodes;
+
+        @Option(names = {"-wfc", "--whole-file-checks"},
+                arity = "1..*",
+                description = "Checkstyle rules to apply to whole files")
+        private List<String> wholeFileChecks = new ArrayList<>();
 
         /**
          * Gets the list of exclusions provided through the command line arguments.
