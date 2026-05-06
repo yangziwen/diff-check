@@ -212,6 +212,12 @@ public final class Main {
         } else {
             filesToProcess = getChangedFilesToProcess(options);
         }
+
+        if (filesToProcess.isEmpty() && options.allowEmpty) {
+            System.out.println("No files found and allow empty enabled. Exiting.");
+            return 0;
+        }
+
         final List<String> messages = options.validateCli(parseResult, filesToProcess);
         final boolean hasMessages = !messages.isEmpty();
         if (hasMessages) {
@@ -724,6 +730,10 @@ public final class Main {
         /** List of file to validate. */
         @Parameters(arity = "1..*", description = "One or more source files to verify")
         private List<File> files;
+
+        @Option(names = {"-ae", "--allow-empty"}, description = "If no file changes are detected exit without"
+                + " throwing an error")
+        private boolean allowEmpty;
 
         /** Config file location. */
         @Option(names = "-c", description = "Specifies the location of the file that defines"
