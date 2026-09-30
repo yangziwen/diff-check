@@ -33,7 +33,7 @@ public class PersonFilter implements IFilter {
         if (CollectionUtil.isEmpty(projectList)) {
             return;
         }
-        for (MavenProject  project : projectList) {
+        for (MavenProject project : projectList) {
             String modulePrefix = generateFullModulePrefix(project);
             for (BlameResult blameResult : blameResults) {
                 String path = blameResult.getResultPath();

@@ -150,7 +150,7 @@ pipeline {
         stage('Check Style') {
             steps {
                 script {
-                    sh "curl -L -o diff-checkstyle.jar https://github.com/yangziwen/diff-check/releases/download/0.0.8/diff-checkstyle.jar"
+                    sh "curl -L -o diff-checkstyle.jar https://github.com/yangziwen/diff-check/releases/download/0.0.9/diff-checkstyle.jar"
                     def returnStatus = sh returnStatus:true, script: "java -jar ./diff-checkstyle.jar -c /custom_checks.xml ${WORKSPACE} --git-dir ${WORKSPACE} --base-rev=origin/master -f xml -o ${WORKSPACE}/checkstyle-result.xml"
                     recordIssues tools: [checkStyle(name: 'Diff-CheckStyle', pattern: '**/checkstyle-result.xml', reportEncoding: 'UTF-8')]
                     if (returnStatus != 0) {
