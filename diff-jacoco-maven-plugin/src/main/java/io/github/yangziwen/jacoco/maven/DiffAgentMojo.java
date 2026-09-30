@@ -75,7 +75,7 @@ public class DiffAgentMojo extends AgentMojo {
                 injectDiffFilter();
             }
         } catch (Exception e) {
-            getLog().error("failed to inject diff filter for old rev [" + oldRev + "] and new rev [" + newRev + "]");
+            getLog().error("failed to inject diff filter for old rev [" + oldRev + "] and new rev [" + newRev + "]", e);
         }
         super.executeMojo();
     }

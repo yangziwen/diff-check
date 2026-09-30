@@ -479,13 +479,17 @@ public final class Main {
             rootModule.configure(config);
             rootModule.addListener(listener);
 
-            List<com.puppycrawl.tools.checkstyle.api.Filter> filters = new ArrayList<>();
-            if (CollectionUtils.isNotEmpty(DIFF_ENTRY_LIST) && rootModule instanceof Checker) {
-                filters.add(new DiffLineFilter(DIFF_ENTRY_LIST));
-                filters.add(new WholeDiffFilter(options.wholeFileChecks));
+            if (rootModule instanceof Checker) {
+                Checker checker = (Checker) rootModule;
+                List<com.puppycrawl.tools.checkstyle.api.Filter> filters = new ArrayList<>();
+                if (CollectionUtils.isNotEmpty(DIFF_ENTRY_LIST)) {
+                    filters.add(new DiffLineFilter(DIFF_ENTRY_LIST));
+                    filters.add(new WholeDiffFilter(options.wholeFileChecks));
+                }
+                if (CollectionUtils.isNotEmpty(filters)) {
+                    checker.addFilter(evt -> filters.stream().anyMatch(f -> f.accept(evt)));
+                }
             }
-            Checker checker = (Checker) rootModule;
-            checker.addFilter(evt -> filters.stream().anyMatch(f -> f.accept(evt)));
 
             // run RootModule
             errorCounter = rootModule.process(filesToProcess);
