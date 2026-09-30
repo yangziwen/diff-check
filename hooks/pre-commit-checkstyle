@@ -42,7 +42,11 @@ if [ -z "$checkstyle_config_file" -o ! -f "$checkstyle_config_file" ]; then
     checkstyle_config_file="/custom_checks.xml"
 fi
 
-echo "Check Style"
+checkstyle_jar_version=`unzip -p ${GIT_HOOK_DIR}/diff-checkstyle.jar META-INF/maven/io.github.yangziwen/diff-checkstyle/pom.properties 2>/dev/null | grep ^version= | cut -d= -f2`
+if [ -z "$checkstyle_jar_version" ]; then
+    checkstyle_jar_version="unknown"
+fi
+echo "Check Style (diff-checkstyle ${checkstyle_jar_version})"
 java $checkstyle_language -jar ${GIT_HOOK_DIR}/diff-checkstyle.jar -c $checkstyle_config_file ${GIT_ROOT_DIR} --git-dir ${GIT_ROOT_DIR} --include-staged-codes $exclude_regexp_opt
 result=$?
 if [ $result -ne 0 ]; then

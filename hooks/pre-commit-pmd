@@ -44,7 +44,11 @@ pmd_rulesets="`git config --get diff-check.pmd.rulesets`"
 if [ -z "$pmd_rulesets" ]; then
     pmd_rulesets="rulesets/java/ali-all.xml"
 fi
-echo "PMD Check"
+pmd_jar_version=`unzip -p ${GIT_HOOK_DIR}/diff-pmd.jar META-INF/maven/io.github.yangziwen/diff-pmd/pom.properties 2>/dev/null | grep ^version= | cut -d= -f2`
+if [ -z "$pmd_jar_version" ]; then
+    pmd_jar_version="unknown"
+fi
+echo "PMD Check (diff-pmd ${pmd_jar_version})"
 java $pmd_language -jar ${GIT_HOOK_DIR}/diff-pmd.jar -R $pmd_rulesets -f diff-text -git-dir ${GIT_ROOT_DIR} -include-staged-codes $exclude_regexp_opt
 result=$?
 if [ $result -ne 0 ]; then
