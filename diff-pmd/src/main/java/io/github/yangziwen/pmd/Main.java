@@ -280,11 +280,14 @@ public class Main {
 
             RuleContext ctx = new RuleContext();
             final AtomicInteger violations = new AtomicInteger(0);
-            DiffLineFilter filter = new DiffLineFilter(Main.DIFF_ENTRY_LIST);
+            // 仅在 git diff 模式下按变更行过滤违规计数；
+            // 非 diff 模式（-d/-u/-filelist）行为应与原版 PMD 一致，统计所有违规
+            final boolean diffMode = !Main.DIFF_ENTRY_LIST.isEmpty();
+            final DiffLineFilter filter = new DiffLineFilter(Main.DIFF_ENTRY_LIST);
             ctx.getReport().addListener(new ReportListener() {
                 @Override
                 public void ruleViolationAdded(RuleViolation ruleViolation) {
-                    if (!filter.accept(ruleViolation)) {
+                    if (diffMode && !filter.accept(ruleViolation)) {
                         return;
                     }
                     violations.incrementAndGet();
