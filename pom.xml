@@ -262,7 +262,6 @@
 				<configuration>
 					<excludes>
 						<exclude>**/Main**.class</exclude>
-						<exclude>io/github/yangziwen/jacoco/**</exclude>
 						<exclude>org/jacoco/core/**</exclude>
 					</excludes>
 				</configuration>
