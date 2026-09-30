@@ -923,7 +923,9 @@ public final class Main {
 
         @Option(names = {"-wfc", "--whole-file-checks"},
                 arity = "1..*",
-                description = "Checkstyle rules to apply to whole files")
+                description = "Checkstyle rules to apply to whole files. "
+                        + "Each rule is matched by exact simple class name "
+                        + "(e.g. 'OuterTypeFilename') or fully qualified name")
         private List<String> wholeFileChecks = new ArrayList<>();
 
         /**

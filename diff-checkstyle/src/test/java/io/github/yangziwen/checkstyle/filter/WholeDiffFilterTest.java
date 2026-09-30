@@ -44,12 +44,37 @@ public class WholeDiffFilterTest {
     }
 
     @Test
-    public void acceptPartialMatch() {
+    public void acceptSimpleNameMatch() {
+        // 简单类名精确相等："Object" 只命中简单类名为 Object 的规则
         List<String> checks = Collections.singletonList("Object");
         Filter filter = new WholeDiffFilter(checks);
         AuditEvent event = buildAuditEvent();
         boolean result = filter.accept(event);
         assertTrue(result);
+    }
+
+    @Test
+    public void acceptFqcnMatch() {
+        // 支持传全限定名
+        List<String> checks = Collections.singletonList("java.lang.Object");
+        Filter filter = new WholeDiffFilter(checks);
+        AuditEvent event = buildAuditEvent();
+        boolean result = filter.accept(event);
+        assertTrue(result);
+    }
+
+    @Test
+    public void noOverMatchForCommonSubstring() {
+        // 子串片段不应误伤同名族规则："Check" 不能命中 FallThroughCheck，
+        // "Regexp" 不能命中 RegexpSinglelineCheck（简单类名不相等）
+        Filter checkFilter = new WholeDiffFilter(Collections.singletonList("Check"));
+        Filter regexpFilter = new WholeDiffFilter(Collections.singletonList("Regexp"));
+        AuditEvent fallThrough = buildAuditEventFor(
+                com.puppycrawl.tools.checkstyle.checks.coding.FallThroughCheck.class);
+        AuditEvent regexpSingleline = buildAuditEventFor(
+                com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineCheck.class);
+        assertFalse(checkFilter.accept(fallThrough));
+        assertFalse(regexpFilter.accept(regexpSingleline));
     }
 
 
@@ -63,8 +88,11 @@ public class WholeDiffFilterTest {
     }
 
     private static AuditEvent buildAuditEvent() {
+        return buildAuditEventFor(Object.class);
+    }
+
+    private static AuditEvent buildAuditEventFor(Class<?> sourceClass) {
         Object source = new Object();
-        Class<?> sourceClass = Object.class;
         Violation violation = new Violation(0, "", "", null, "", sourceClass, "");
         return new AuditEvent(source, "", violation);
     }
