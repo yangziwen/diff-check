@@ -35,9 +35,14 @@ public class DiffHelper {
 
     private static final Method DIFF_ENTRY_MODIFY_METHOD = getDiffEntryModifyMethod();
 
+    /**
+     * 空内容，用于两种场景：
+     * 1. 内容确实不存在（GITLINK 指向 zeroId、MISSING mode、非 BLOB 类型）；
+     * 2. 文件过大超过 bigFileThreshold 无法加载内容。
+     * 注意：场景 2 下新旧两侧均为空内容，edit 列表为空，
+     * 该文件实质上被排除在 diff 行过滤之外（行级检查不会覆盖它）。
+     */
     private static final byte[] EMPTY = new byte[] {};
-
-    private static final byte[] BINARY = new byte[] {};
 
     private DiffHelper() {}
 
@@ -94,13 +99,14 @@ public class DiffHelper {
             return ldr.getBytes(bigFileThreshold);
 
         } catch (LargeObjectException.ExceedsLimit overLimit) {
-            return BINARY;
+            // 文件过大，按空内容处理，产出空 edit 列表（见 EMPTY 注释）
+            return EMPTY;
 
         } catch (LargeObjectException.ExceedsByteArrayLimit overLimit) {
-            return BINARY;
+            return EMPTY;
 
         } catch (LargeObjectException.OutOfMemory tooBig) {
-            return BINARY;
+            return EMPTY;
 
         } catch (LargeObjectException tooBig) {
             tooBig.setObjectId(id.toObjectId());
