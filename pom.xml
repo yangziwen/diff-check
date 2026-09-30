@@ -21,9 +21,8 @@
 		<commons-io.version>2.14.0</commons-io.version>
 		<commons-lang3.version>3.18.0</commons-lang3.version>
 		<lombok.version>1.18.2</lombok.version>
-		<junit.version>4.13.1</junit.version>
-		<mockito.version>1.10.19</mockito.version>
-		<powermock.version>1.6.6</powermock.version>
+		<junit-jupiter.version>5.9.3</junit-jupiter.version>
+		<mockito.version>4.11.0</mockito.version>
 	</properties>
 
 	<distributionManagement>
@@ -219,10 +218,9 @@
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit-jupiter.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.eclipse.jgit</groupId>
@@ -237,21 +235,9 @@
 				<scope>test</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-api-mockito</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-module-junit4</artifactId>
-				<version>${powermock.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.powermock</groupId>
-				<artifactId>powermock-module-junit4-rule-agent</artifactId>
-				<version>${powermock.version}</version>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-inline</artifactId>
+				<version>${mockito.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -259,6 +245,15 @@
 
 	<build>
 		<finalName>diff-check</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.2.5</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>io.github.yangziwen</groupId>

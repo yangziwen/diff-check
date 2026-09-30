@@ -7,9 +7,11 @@ import java.util.Arrays;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.Edit;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DiffEntryWrapperTest {
 
@@ -20,7 +22,7 @@ public class DiffEntryWrapperTest {
         DiffEntryWrapper wrapper = DiffEntryWrapper.builder()
                 .diffEntry(diffEntry)
                 .build();
-        Assert.assertTrue(wrapper.isDeleted());
+        assertTrue(wrapper.isDeleted());
     }
 
     @Test
@@ -28,7 +30,7 @@ public class DiffEntryWrapperTest {
         DiffEntryWrapper wrapper = DiffEntryWrapper.builder()
                 .editList(Arrays.asList(buildDelete(), buildDelete()))
                 .build();
-        Assert.assertTrue(wrapper.isAllDeletedEdits());
+        assertTrue(wrapper.isAllDeletedEdits());
     }
 
     @Test
@@ -40,7 +42,7 @@ public class DiffEntryWrapperTest {
                 .diffEntry(new DummyDiffEntry(file))
                 .build();
         String result = wrapper.getAbsoluteNewPath();
-        Assert.assertEquals(new File(directory, file).getCanonicalPath(), result);
+        assertEquals(new File(directory, file).getCanonicalPath(), result);
     }
 
     // A "delete" edit is one where: beginA < endA && beginB == endB

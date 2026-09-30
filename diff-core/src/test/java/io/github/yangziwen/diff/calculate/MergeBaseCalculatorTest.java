@@ -6,26 +6,16 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.Test;
 
-@RunWith(PowerMockRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class MergeBaseCalculatorTest extends BaseCalculatorTest {
 
     private static final Person DEFAULT_USER = Person.builder()
             .name("test")
             .email("test@test.com")
             .build();
-
-    @Before
-    public void before() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        setUp();
-    }
 
     @Test
     public void testCalculateMergeBase() throws Exception {
@@ -59,7 +49,7 @@ public class MergeBaseCalculatorTest extends BaseCalculatorTest {
             String mergeBase = new MergeBaseCalculator()
                 .calculateMergeBase(repoDir, commit1.name(), commit2.name());
 
-            Assert.assertEquals(baseCommit.name(), mergeBase);
+            assertEquals(baseCommit.name(), mergeBase);
         }
 
     }

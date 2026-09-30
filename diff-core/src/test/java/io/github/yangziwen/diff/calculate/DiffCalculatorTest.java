@@ -1,6 +1,7 @@
 package io.github.yangziwen.diff.calculate;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,27 +11,16 @@ import org.eclipse.jgit.diff.HistogramDiff;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.junit.jupiter.api.Test;
 
-@RunWith(PowerMockRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class DiffCalculatorTest extends BaseCalculatorTest {
 
     private static final Person DEFAULT_USER = Person.builder()
             .name("test")
             .email("test@test.com")
             .build();
-
-    @Before
-    public void before() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        setUp();
-    }
 
     @Test
     public void testCalculateDiff() throws Exception {
@@ -74,22 +64,22 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             List<DiffEntryWrapper> wrappers = calculator.calculateDiff(
                     repoDir, oldCommit.name(), newCommit.name(), true);
 
-            Assert.assertEquals(1, wrappers.size());
+            assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
+            assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
             Edit replaceEdit = edits.get(0);
-            Assert.assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
-            Assert.assertEquals(1, replaceEdit.getBeginB());
-            Assert.assertEquals(2, replaceEdit.getEndB());
+            assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
+            assertEquals(1, replaceEdit.getBeginB());
+            assertEquals(2, replaceEdit.getEndB());
 
             Edit insertEdit = edits.get(1);
-            Assert.assertEquals(Edit.Type.INSERT, insertEdit.getType());
-            Assert.assertEquals(3, insertEdit.getBeginB());
-            Assert.assertEquals(4, insertEdit.getEndB());
+            assertEquals(Edit.Type.INSERT, insertEdit.getType());
+            assertEquals(3, insertEdit.getBeginB());
+            assertEquals(4, insertEdit.getEndB());
         }
 
     }
@@ -131,26 +121,25 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             DiffCalculator calculator = DiffCalculator.builder()
                     .diffAlgorithm(new HistogramDiff())
                     .build();
-            List<DiffEntryWrapper> wrappers = Whitebox.<List<DiffEntryWrapper>>invokeMethod(
-                    calculator, "doCalculateCommitDiff",
+            List<DiffEntryWrapper> wrappers = invokeMethod(calculator, "doCalculateCommitDiff",
                     oldCommit, newCommit, reader, git, repoDir, Collections.emptySet());
 
-            Assert.assertEquals(1, wrappers.size());
+            assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
+            assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
             Edit replaceEdit = edits.get(0);
-            Assert.assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
-            Assert.assertEquals(1, replaceEdit.getBeginB());
-            Assert.assertEquals(2, replaceEdit.getEndB());
+            assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
+            assertEquals(1, replaceEdit.getBeginB());
+            assertEquals(2, replaceEdit.getEndB());
 
             Edit insertEdit = edits.get(1);
-            Assert.assertEquals(Edit.Type.INSERT, insertEdit.getType());
-            Assert.assertEquals(3, insertEdit.getBeginB());
-            Assert.assertEquals(4, insertEdit.getEndB());
+            assertEquals(Edit.Type.INSERT, insertEdit.getType());
+            assertEquals(3, insertEdit.getBeginB());
+            assertEquals(4, insertEdit.getEndB());
         }
 
     }
@@ -175,21 +164,20 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             DiffCalculator calculator = DiffCalculator.builder()
                     .diffAlgorithm(new HistogramDiff())
                     .build();
-            List<DiffEntryWrapper> wrappers = Whitebox.<List<DiffEntryWrapper>>invokeMethod(
-                    calculator, "doCalculateCommitDiff",
+            List<DiffEntryWrapper> wrappers = invokeMethod(calculator, "doCalculateCommitDiff",
                     oldCommit, newCommit, reader, git, repoDir, Collections.emptySet());
 
-            Assert.assertEquals(1, wrappers.size());
+            assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToAdd, wrapper.getNewFile());
+            assertEquals(fileToAdd, wrapper.getNewFile());
 
             List<Edit> edits = wrapper.getEditList();
 
             Edit insertEdit = edits.get(0);
-            Assert.assertEquals(Edit.Type.INSERT, insertEdit.getType());
-            Assert.assertEquals(0, insertEdit.getBeginB());
-            Assert.assertEquals(1, insertEdit.getEndB());
+            assertEquals(Edit.Type.INSERT, insertEdit.getType());
+            assertEquals(0, insertEdit.getBeginB());
+            assertEquals(1, insertEdit.getEndB());
 
         }
 
@@ -231,26 +219,25 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             DiffCalculator calculator = DiffCalculator.builder()
                     .diffAlgorithm(new HistogramDiff())
                     .build();
-            List<DiffEntryWrapper> wrappers = Whitebox.<List<DiffEntryWrapper>>invokeMethod(
-                    calculator, "doCalculateIndexedDiff",
+            List<DiffEntryWrapper> wrappers = invokeMethod(calculator, "doCalculateIndexedDiff",
                     oldCommit, reader, git, repoDir);
 
-            Assert.assertEquals(1, wrappers.size());
+            assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
+            assertEquals(fileToChange.getAbsolutePath(), wrapper.getNewFile().getAbsolutePath());
 
             List<Edit> edits = wrapper.getEditList();
 
             Edit replaceEdit = edits.get(0);
-            Assert.assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
-            Assert.assertEquals(1, replaceEdit.getBeginB());
-            Assert.assertEquals(2, replaceEdit.getEndB());
+            assertEquals(Edit.Type.REPLACE, replaceEdit.getType());
+            assertEquals(1, replaceEdit.getBeginB());
+            assertEquals(2, replaceEdit.getEndB());
 
             Edit insertEdit = edits.get(1);
-            Assert.assertEquals(Edit.Type.INSERT, insertEdit.getType());
-            Assert.assertEquals(3, insertEdit.getBeginB());
-            Assert.assertEquals(4, insertEdit.getEndB());
+            assertEquals(Edit.Type.INSERT, insertEdit.getType());
+            assertEquals(3, insertEdit.getBeginB());
+            assertEquals(4, insertEdit.getEndB());
         }
 
     }
@@ -274,21 +261,20 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
             DiffCalculator calculator = DiffCalculator.builder()
                     .diffAlgorithm(new HistogramDiff())
                     .build();
-            List<DiffEntryWrapper> wrappers = Whitebox.<List<DiffEntryWrapper>>invokeMethod(
-                    calculator, "doCalculateIndexedDiff",
+            List<DiffEntryWrapper> wrappers = invokeMethod(calculator, "doCalculateIndexedDiff",
                     oldCommit, reader, git, repoDir);
 
-            Assert.assertEquals(1, wrappers.size());
+            assertEquals(1, wrappers.size());
 
             DiffEntryWrapper wrapper = wrappers.get(0);
-            Assert.assertEquals(fileToAdd.getAbsolutePath(), wrapper.getAbsoluteNewPath());
+            assertEquals(fileToAdd.getAbsolutePath(), wrapper.getAbsoluteNewPath());
 
             List<Edit> edits = wrapper.getEditList();
 
             Edit insertEdit = edits.get(0);
-            Assert.assertEquals(Edit.Type.INSERT, insertEdit.getType());
-            Assert.assertEquals(0, insertEdit.getBeginB());
-            Assert.assertEquals(1, insertEdit.getEndB());
+            assertEquals(Edit.Type.INSERT, insertEdit.getType());
+            assertEquals(0, insertEdit.getBeginB());
+            assertEquals(1, insertEdit.getEndB());
 
         }
 
@@ -296,6 +282,20 @@ public class DiffCalculatorTest extends BaseCalculatorTest {
 
     private RevCommit doCommit(Git git) throws Exception {
         return super.doCommit(git, DEFAULT_USER, DEFAULT_USER, "new commit");
+    }
+
+    /** 替代 powermock Whitebox 的私有方法反射调用工具 */
+    @SuppressWarnings("unchecked")
+    private static <T> T invokeMethod(Object target, String methodName, Object... args) throws Exception {
+        for (Class<?> clazz = target.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.getName().equals(methodName)) {
+                    method.setAccessible(true);
+                    return (T) method.invoke(target, args);
+                }
+            }
+        }
+        throw new NoSuchMethodException(methodName);
     }
 
 }
