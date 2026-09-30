@@ -247,7 +247,8 @@ public final class Main {
     }
 
     private static List<File> getChangedFilesToProcess(CliOptions options) {
-        List<Pattern> patternsToExclude = options.getExclusions();
+        List<File> excludePaths = options.exclude;
+        List<Pattern> excludeRegexPatterns = options.excludeRegex;
 
         String gitDirPath = options.gitDir;
         File repoDir = new File(gitDirPath);
@@ -266,8 +267,8 @@ public final class Main {
             List<DiffEntryWrapper> diffEntryList = calculator.calculateDiff(repoDir, oldRev, newRev, includeStagedCodes)
                     .stream()
                     .filter(diffEntry -> !diffEntry.isDeleted())
-                    .filter(diffEntry -> patternsToExclude.stream()
-                            .noneMatch(p -> p.matcher(diffEntry.getNewPath()).matches()))
+                    .filter(diffEntry -> !isDiffPathExcluded(
+                            diffEntry.getNewPath(), repoDir, excludePaths, excludeRegexPatterns))
                     .collect(Collectors.toList());
 
             DIFF_ENTRY_LIST.addAll(diffEntryList);
@@ -281,6 +282,42 @@ public final class Main {
             System.out.println("error happened when calculate git diff");
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * 判断 diff 模式下的变更文件是否被排除。
+     *
+     * git diff 的路径（newPath）是相对仓库根的 '/' 分隔路径，而 -e/--exclude
+     * 用户可能传相对路径也可能传绝对路径，因此同时用相对和绝对两种形式做
+     * 目录前缀匹配（路径相等或位于排除目录之下均视为命中）。
+     */
+    static boolean isDiffPathExcluded(
+            String newPath, File repoDir, List<File> excludePaths, List<Pattern> excludeRegexPatterns) {
+        String absoluteNewPath = new File(repoDir, newPath).getPath().replace(File.separatorChar, '/');
+        for (File excludePath : excludePaths) {
+            if (matchesPath(newPath, excludePath.getPath())
+                    || matchesPath(absoluteNewPath, excludePath.getAbsolutePath())) {
+                return true;
+            }
+        }
+        for (Pattern pattern : excludeRegexPatterns) {
+            if (pattern.matcher(newPath).matches() || pattern.matcher(absoluteNewPath).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 目录前缀匹配：path 等于 excludePath，或位于 excludePath 目录之下（以 excludePath/ 开头）。
+     * 两边统一为 '/' 分隔符后比较。
+     */
+    private static boolean matchesPath(String path, String excludePath) {
+        String normalizedExclude = excludePath.replace(File.separatorChar, '/');
+        if (normalizedExclude.endsWith("/")) {
+            normalizedExclude = normalizedExclude.substring(0, normalizedExclude.length() - 1);
+        }
+        return path.equals(normalizedExclude) || path.startsWith(normalizedExclude + "/");
     }
 
     /**
