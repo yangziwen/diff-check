@@ -36,7 +36,6 @@ import io.github.yangziwen.pmd.filter.DiffLineFilter;
 import net.sourceforge.pmd.PMD;
 import net.sourceforge.pmd.PMDException;
 import net.sourceforge.pmd.Report;
-import net.sourceforge.pmd.ReportListener;
 import net.sourceforge.pmd.Rule;
 import net.sourceforge.pmd.RuleContext;
 import net.sourceforge.pmd.RuleSet;
@@ -45,6 +44,7 @@ import net.sourceforge.pmd.RuleSets;
 import net.sourceforge.pmd.RuleViolation;
 import net.sourceforge.pmd.RulesetsFactoryUtils;
 import net.sourceforge.pmd.SourceCodeProcessor;
+import net.sourceforge.pmd.ThreadSafeReportListener;
 import net.sourceforge.pmd.benchmark.Benchmark;
 import net.sourceforge.pmd.benchmark.Benchmarker;
 import net.sourceforge.pmd.benchmark.TextReport;
@@ -62,6 +62,7 @@ import net.sourceforge.pmd.stat.Metric;
 import net.sourceforge.pmd.util.ClasspathClassLoader;
 import net.sourceforge.pmd.util.FileUtil;
 import net.sourceforge.pmd.util.IOUtil;
+import net.sourceforge.pmd.util.ResourceLoader;
 import net.sourceforge.pmd.util.database.DBMSMetadata;
 import net.sourceforge.pmd.util.database.DBURI;
 import net.sourceforge.pmd.util.database.SourceObject;
@@ -197,7 +198,7 @@ public class Main {
         Report report = Report.createReport(ctx, fileName);
 
         for (Rule rule : brokenRules) {
-            report.addConfigError(new Report.RuleConfigurationError(rule, rule.dysfunctionReason()));
+            report.addConfigError(new Report.ConfigurationError(rule, rule.dysfunctionReason()));
         }
 
         return report;
@@ -254,7 +255,8 @@ public class Main {
     public static int doPMD(PMDConfiguration configuration) {
 
         // Load the RuleSets
-        RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration);
+        // PMD 6.x 起需要显式提供 ResourceLoader
+        RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.getRulesetFactory(configuration, new ResourceLoader());
         RuleSets ruleSets = RulesetsFactoryUtils.getRuleSetsWithBenchmark(configuration.getRuleSets(), ruleSetFactory);
         if (ruleSets == null) {
             return 0;
@@ -284,7 +286,7 @@ public class Main {
             // 非 diff 模式（-d/-u/-filelist）行为应与原版 PMD 一致，统计所有违规
             final boolean diffMode = !Main.DIFF_ENTRY_LIST.isEmpty();
             final DiffLineFilter filter = new DiffLineFilter(Main.DIFF_ENTRY_LIST);
-            ctx.getReport().addListener(new ReportListener() {
+            ctx.getReport().addListener(new ThreadSafeReportListener() {
                 @Override
                 public void ruleViolationAdded(RuleViolation ruleViolation) {
                     if (diffMode && !filter.accept(ruleViolation)) {

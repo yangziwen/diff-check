@@ -13,7 +13,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import net.sourceforge.pmd.PropertyDescriptor;
+import net.sourceforge.pmd.properties.PropertyDescriptor;
 import net.sourceforge.pmd.renderers.CSVRenderer;
 import net.sourceforge.pmd.renderers.CodeClimateRenderer;
 import net.sourceforge.pmd.renderers.EmacsRenderer;

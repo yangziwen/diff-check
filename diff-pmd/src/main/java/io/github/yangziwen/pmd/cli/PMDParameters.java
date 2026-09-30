@@ -146,7 +146,10 @@ public class PMDParameters {
                     "Please provide a parameter for source root directory (-dir or -d), database URI (-uri or -u), file list path (-filelist) or git dir (-git-dir).");
         }
         PMDConfiguration configuration = new PMDConfiguration();
-        configuration.setInputPaths(params.getSourceDir());
+        // PMD 6 起 setInputPaths(String) 不再容忍 null（会 NPE），git-dir 模式下 sourceDir 为空，需跳过
+        if (params.getSourceDir() != null) {
+            configuration.setInputPaths(params.getSourceDir());
+        }
         configuration.setInputFilePath(params.getFileListPath());
         configuration.setInputUri(params.getUri());
         configuration.setReportFormat(params.getFormat());
