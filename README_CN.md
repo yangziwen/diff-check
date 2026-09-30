@@ -102,6 +102,8 @@
 	</plugin>
 	```
 
+> **兼容性说明**：`diff-jacoco-maven-plugin` 与 **jacoco 0.8.7** 内部实现及 **JDK 8 ~ 11** 强绑定。它通过反射向 `org.jacoco.core.internal.analysis.filter.Filters` 注入自定义 filter，并改写 `Field.modifiers` 以绕过 `final` 语义——后者在 JDK 12+ 上不再可用。请勿在未适配 `FilterUtil` 的情况下升级 `org.jacoco:jacoco-maven-plugin` 版本或构建 JDK（详见 `FilterUtil` 类注释）。
+
 * 执行测试和单测覆盖率统计
 
 	```Shell

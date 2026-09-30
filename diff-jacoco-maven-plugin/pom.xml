@@ -35,6 +35,11 @@
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
+			<!-- 版本锁定 0.8.7：FilterUtil 通过反射操作
+			     org.jacoco.core.internal.analysis.filter.Filters 的私有字段，
+			     并修改 Field.modifiers 绕过 final，均依赖 0.8.7 的内部实现，
+			     且 modifiers hack 仅在 JDK 8 ~ 11 可用。
+			     升级 jacoco 或 JDK 前必须先适配 FilterUtil，详见其类注释。 -->
 			<version>0.8.7</version>
 		</dependency>
 		<dependency>
