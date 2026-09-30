@@ -30,17 +30,33 @@
 		<dependency>
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.4</version>
+			<!-- 与下方 maven-plugin-plugin 3.6.4 版本配套 -->
+			<version>3.6.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<!-- 版本锁定 0.8.7：FilterUtil 通过反射操作
-			     org.jacoco.core.internal.analysis.filter.Filters 的私有字段，
-			     并修改 Field.modifiers 绕过 final，均依赖 0.8.7 的内部实现，
-			     且 modifiers hack 仅在 JDK 8 ~ 11 可用。
-			     升级 jacoco 或 JDK 前必须先适配 FilterUtil，详见其类注释。 -->
-			<version>0.8.7</version>
+			<!--	版本锁定 0.8.15：同包名 shadow 类
+					 org.jacoco.core.internal.analysis.filter.Filters（见 src/main/java）
+					 的内置 filter 清单按该版本的官方 Filters.java 逐项同步，
+					 且注册表机制与该版本的 Analyzer 调用约定（每次分析调用 all()）配合。
+					 升级 jacoco 时必须同步适配 shadow 类与 FilterUtil，详见两者注释。 -->
+			<version>0.8.15</version>
+		</dependency>
+		<!--	jacoco 0.8.7 会传递提供 maven-plugin-api / maven-core，
+				 0.8.15 起改为 provided 不再传递，这里显式补充，
+				 版本与 jacoco 0.8.15 自身编译所用的 maven 版本（prerequisites.maven=3.0）对齐。 -->
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>3.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-core</artifactId>
+			<version>3.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -133,7 +149,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-plugin-plugin</artifactId>
-					<version>3.6.0</version>
+					<version>3.6.4</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
