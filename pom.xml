@@ -4,7 +4,7 @@
 
 	<groupId>io.github.yangziwen</groupId>
 	<artifactId>diff-check</artifactId>
-	<version>0.0.9</version>
+	<version>0.0.10-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>diff-check</name>
@@ -254,10 +254,10 @@
 			<plugin>
 				<groupId>io.github.yangziwen</groupId>
                 <artifactId>diff-jacoco-maven-plugin</artifactId>
-                <!-- 不能使用 ${project.version}：root pom 在构建期使用本插件，
-                     而插件模块又依赖 diff-core，会导致 reactor 循环依赖。
-                     固定引用已发布到中央仓库的版本 -->
-                <version>0.0.8</version>
+				<!-- 不能使用 ${project.version}：root pom 在构建期使用本插件，
+				     而插件模块又依赖 diff-core，会导致 reactor 循环依赖。
+				     固定引用已发布到中央仓库的版本 -->
+				<version>0.0.9</version>
 				<configuration>
 					<excludes>
 						<exclude>**/Main**.class</exclude>
