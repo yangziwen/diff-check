@@ -1,10 +1,9 @@
 package io.github.yangziwen.checkstyle.filter;
 
+import java.util.List;
+
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 import com.puppycrawl.tools.checkstyle.api.Filter;
-import com.puppycrawl.tools.checkstyle.api.Violation;
-
-import java.util.List;
 
 public class WholeDiffFilter implements Filter {
 

@@ -40,7 +40,6 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.github.yangziwen.checkstyle.filter.WholeDiffFilter;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -76,6 +75,7 @@ import com.puppycrawl.tools.checkstyle.utils.CommonUtil;
 import com.puppycrawl.tools.checkstyle.utils.XpathUtil;
 
 import io.github.yangziwen.checkstyle.filter.DiffLineFilter;
+import io.github.yangziwen.checkstyle.filter.WholeDiffFilter;
 import io.github.yangziwen.diff.calculate.DiffCalculator;
 import io.github.yangziwen.diff.calculate.DiffEntryWrapper;
 import picocli.CommandLine;
