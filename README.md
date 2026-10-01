@@ -103,8 +103,6 @@ git config diff-check.pmd.language zh
  </plugin>
 ```
 
-> **Compatibility note**: `diff-jacoco-maven-plugin` is tightly bound to **jacoco 0.8.7** internals and **JDK 8 ~ 11**. It injects custom filters into `org.jacoco.core.internal.analysis.filter.Filters` via reflection and rewrites `Field.modifiers` to bypass `final` — the latter hack no longer works on JDK 12+. Do NOT bump `org.jacoco:jacoco-maven-plugin` version or upgrade the build JDK without adapting `FilterUtil` first (see its class-level javadoc for details).
-
 * Run the unit tests
 ```Shell
  # Incremental code coverage scanning is achieved by specifying commit or branch for `jacoco.diff.oldrev` and `jacoco.diff.newrev`
