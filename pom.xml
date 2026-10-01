@@ -4,7 +4,7 @@
 
 	<groupId>io.github.yangziwen</groupId>
 	<artifactId>diff-check</artifactId>
-	<version>0.0.10</version>
+	<version>0.0.11-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>diff-check</name>
@@ -16,9 +16,7 @@
 		<jgit.version>5.13.3.202401111512-r</jgit.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<checkstyle.version>9.3</checkstyle.version>
-		<!-- PMD 6.55.0 是 6.x 系列最后一个支持 JDK 8 的版本，Java 语法支持到 18 -->
 		<pmd.version>6.55.0</pmd.version>
-		<!-- p3c-pmd 2.1.1 基于 PMD 6.15 构建，规则 API 在 6.x 内二进制兼容，可运行在 6.55.0 上 -->
 		<p3c.version>2.1.1</p3c.version>
 		<commons-io.version>2.14.0</commons-io.version>
 		<commons-lang3.version>3.18.0</commons-lang3.version>
@@ -259,7 +257,7 @@
 				<!-- 不能使用 ${project.version}：root pom 在构建期使用本插件，
 				     而插件模块又依赖 diff-core，会导致 reactor 循环依赖。
 				     固定引用已发布到中央仓库的版本 -->
-				<version>0.0.9</version>
+				<version>0.0.10</version>
 				<configuration>
 					<excludes>
 						<exclude>**/Main**.class</exclude>

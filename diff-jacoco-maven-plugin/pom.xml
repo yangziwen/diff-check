@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>diff-check</artifactId>
 		<groupId>io.github.yangziwen</groupId>
-		<version>0.0.10</version>
+		<version>0.0.11-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>diff-jacoco-maven-plugin</artifactId>
@@ -36,18 +36,8 @@
 		<dependency>
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
-			<!--	版本锁定 0.8.15：同包名 shadow 类
-					 org.jacoco.core.internal.analysis.filter.Filters（见 src/main/java）
-					 的内置 filter 清单按该版本的官方 Filters.java 逐项同步，
-					 且注册表机制与该版本的 Analyzer 调用约定（每次分析调用 all()）配合。
-					 升级 jacoco 时必须同步适配 shadow 类与 FilterUtil，详见两者注释。 -->
 			<version>0.8.15</version>
 		</dependency>
-		<!--	jacoco 0.8.7 会传递提供 maven-plugin-api / maven-core，
-				 0.8.15 起改为 provided 不再传递，这里显式补充。
-				 版本取 maven 3.8.1（消除 Dependabot 对 3.0 的漏洞告警）；
-				 两者为 provided 仅参与编译期检查，不进入发布产物，
-				 用到的 API（MavenProject/AbstractMojo 等）在 3.x 全系稳定。 -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
