@@ -44,18 +44,20 @@
 			<version>0.8.15</version>
 		</dependency>
 		<!--	jacoco 0.8.7 会传递提供 maven-plugin-api / maven-core，
-				 0.8.15 起改为 provided 不再传递，这里显式补充，
-				 版本与 jacoco 0.8.15 自身编译所用的 maven 版本（prerequisites.maven=3.0）对齐。 -->
+				 0.8.15 起改为 provided 不再传递，这里显式补充。
+				 版本取 maven 3.8.1（消除 Dependabot 对 3.0 的漏洞告警）；
+				 两者为 provided 仅参与编译期检查，不进入发布产物，
+				 用到的 API（MavenProject/AbstractMojo 等）在 3.x 全系稳定。 -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.0</version>
+			<version>3.8.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-core</artifactId>
-			<version>3.0</version>
+			<version>3.8.1</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
